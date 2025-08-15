@@ -580,9 +580,6 @@ video {
 .relative {
   position: relative;
 }
-.sticky {
-  position: sticky;
-}
 .inset-0 {
   inset: 0px;
 }
@@ -651,9 +648,6 @@ video {
 }
 .contents {
   display: contents;
-}
-.hidden {
-  display: none;
 }
 .h-8 {
   height: 2rem;

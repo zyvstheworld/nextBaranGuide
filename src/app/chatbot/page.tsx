@@ -144,6 +144,7 @@ export default function ChatbotPage() {
             height={50}
             className="mini-seal"
           />
+           <span className="chatbot-title">(Barangay Old Cabalan Chatbot)</span>
         </div>
       </header>
 
@@ -233,6 +234,14 @@ export default function ChatbotPage() {
         .mini-seal {
           margin-right: 8px;
         }
+        .chatbot-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #4361ee;
+            letter-spacing: 0.01em;
+            margin-left: 6px;
+            white-space: nowrap;
+  }
 
         .messages-container {
           flex: 1;
