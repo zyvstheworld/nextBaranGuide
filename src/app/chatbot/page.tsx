@@ -144,7 +144,7 @@ export default function ChatbotPage() {
             height={50}
             className="mini-seal"
           />
-           <span className="chatbot-title">(Barangay Old Cabalan Chatbot)</span>
+           <span className="chatbot-title">(Barangay Old Cabalan)</span>
         </div>
       </header>
 
