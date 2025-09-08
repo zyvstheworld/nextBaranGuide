@@ -7,6 +7,13 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'BaranGuide',
   description: 'Your guide to everything',
+  applicationName: 'BaranGuide',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    title: 'BaranGuide',
+    statusBarStyle: 'default',
+  },
 }
 
 export default function RootLayout({
