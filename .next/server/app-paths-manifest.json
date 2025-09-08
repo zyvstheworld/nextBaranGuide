@@ -1,15 +1,15 @@
 {
   "/_not-found": "app/_not-found.js",
-  "/api/gemini-chat/route": "app/api/gemini-chat/route.js",
-  "/api/admin/faqs/route": "app/api/admin/faqs/route.js",
-  "/chatbot/page": "app/chatbot/page.js",
-  "/page": "app/page.js",
-  "/api/chatbot/message/route": "app/api/chatbot/message/route.js",
   "/api/admin/services/route": "app/api/admin/services/route.js",
-  "/manifest.webmanifest/route": "app/manifest.webmanifest/route.js",
-  "/offline/page": "app/offline/page.js",
+  "/api/admin/faqs/route": "app/api/admin/faqs/route.js",
+  "/api/gemini-chat/route": "app/api/gemini-chat/route.js",
   "/api/admin/users/route": "app/api/admin/users/route.js",
-  "/admin/services/page": "app/admin/services/page.js",
+  "/api/chatbot/message/route": "app/api/chatbot/message/route.js",
+  "/offline/page": "app/offline/page.js",
+  "/page": "app/page.js",
+  "/manifest.webmanifest/route": "app/manifest.webmanifest/route.js",
+  "/chatbot/page": "app/chatbot/page.js",
+  "/admin/faqs/page": "app/admin/faqs/page.js",
   "/admin/login/page": "app/admin/login/page.js",
-  "/admin/faqs/page": "app/admin/faqs/page.js"
+  "/admin/services/page": "app/admin/services/page.js"
 }
