@@ -133,48 +133,74 @@ export default function ChatbotPage() {
   }, [loading]);
 
   return (
-    <div className="chat-container">
-      <div className="city-seal-background"></div>
-      <header>
-        <div className="logo">
-            <Image
-              src="/baranguide-log.png"
+    <div className="page-wrapper">
+      <aside className="desktop-sidebar" aria-label="Barangay information sidebar">
+        <div className="sidebar-card">
+          <div className="sidebar-title-row">
+            <Image src="/gapo-seal.png" alt="Gapo Seal" width={34} height={34} className="sidebar-mini" />
+            <h2 className="sidebar-title"><strong>Sangguniang Barangay</strong></h2>
+            <Image src="/olongapo-seal.png" alt="Olongapo Seal" width={34} height={34} className="sidebar-mini" />
+          </div>
+          <ul className="officials-list">
+            <li><strong>Hon. Rolando A. Alba Jr.</strong><br/>Punong Barangay</li>
+            <li><strong>Hon. Jose B. Galang Jr.</strong><br/>Barangay Kagawad</li>
+            <li><strong>Hon. Gerardo Q. Andrade</strong><br/>Barangay Kagawad</li>
+            <li><strong>Hon. Roderick T. Gaton</strong><br/>Barangay Kagawad</li>
+            <li><strong>Hon. Glenda C. Flores</strong><br/>Barangay Kagawad</li>
+            <li><strong>Hon. Ferdinand R. Dicen</strong><br/>Barangay Kagawad</li>
+            <li><strong>Hon. Joey A. Maglalang</strong><br/>Barangay Kagawad</li>
+            <li><strong>Hon. Jerome L. Duos</strong><br/>Barangay Kagawad</li>
+            <li><strong>Hon. Zenaida L. Miranda</strong><br/>IPMR</li>
+            <li><strong>Hon. Angel Victoria M. Bibanco</strong><br/>SK Chairperson</li>
+            <li><strong>Mr. Edmer T. Lucido</strong><br/>Barangay Secretary</li>
+            <li><strong>Ms. Rosalinda P. Eledia</strong><br/>Barangay Treasurer</li>
+          </ul>
+          <div className="year-badge">2024</div>
+        </div>
+      </aside>
+
+      <div className="chat-container">
+        <div className="city-seal-background"></div>
+        <header>
+          <div className="logo">
+              <Image
+                src="/baranguide-log.png"
             alt="Olongapo City Seal"
             width={150}
             height={50}
             className="mini-seal"
           />
            <span className="chatbot-title">(Barangay Old Cabalan)</span>
-        </div>
-      </header>
+          </div>
+        </header>
 
-      <div className="messages-container" ref={chatContainerRef}>
-        {messages.map((message, i) => (
-          <div key={i} className={`message ${message.sender}`}>
-            {message.sender === 'bot' ? (
-              <div className={`message-content bot-message ${message.isError ? 'error' : ''}`}>
-                <div dangerouslySetInnerHTML={{ __html: formatMessage(message.content) }} />
-              </div>
-            ) : (
-              <div className="message-content user-message">
-                {message.content}
+        <div className="messages-container" ref={chatContainerRef}>
+          {messages.map((message, i) => (
+            <div key={i} className={`message ${message.sender}`}>
+              {message.sender === 'bot' ? (
+                <div className={`message-content bot-message ${message.isError ? 'error' : ''}`}>
+                  <div dangerouslySetInnerHTML={{ __html: formatMessage(message.content) }} />
+                </div>
+              ) : (
+                <div className="message-content user-message">
+                  {message.content}
+                </div>
+              )}
+            </div>
+          ))}
+
+          {loading && (
+            <div className="message bot">
+              <div className="message-content bot-message loading">
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
+                </div>
               </div>
             )}
           </div>
-        ))}
 
-        {loading && (
-          <div className="message bot">
-            <div className="message-content bot-message loading">
-              <span className="dot"></span>
-              <span className="dot"></span>
-              <span className="dot"></span>
-              </div>
-            </div>
-          )}
-        </div>
-
-      <form onSubmit={handleSubmit} className="input-area">
+        <form onSubmit={handleSubmit} className="input-area">
           <input
             type="text"
           value={userInput}
@@ -189,8 +215,9 @@ export default function ChatbotPage() {
             </svg>
           </button>
         </form>
-
+      </div>
       <style jsx>{`
+        .page-wrapper { display: flex; }
         .chat-container {
           width: 100%;
           height: calc(var(--vh, 1vh) * 100);
@@ -199,8 +226,8 @@ export default function ChatbotPage() {
           flex-direction: column;
           background-color: white;
           position: relative;
-          max-width: 1200px;
-          margin: 0 auto;
+          max-width: 100%;
+          margin: 0;
         }
 
         .city-seal-background {
@@ -243,9 +270,51 @@ export default function ChatbotPage() {
             white-space: nowrap;
   }
 
+        .desktop-sidebar {
+          display: none;
+          width: 300px;
+          flex-shrink: 0;
+        }
+
+        .sidebar-card {
+          position: sticky;
+          top: 76px;
+          background: #ffffff;
+          border: 1px solid #eaeaea;
+          border-radius: 12px;
+          padding: 16px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+        .sidebar-title-row { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+        .sidebar-mini { flex:0 0 auto; }
+
+        .sidebar-title {
+          margin: 0 0 8px 0;
+          font-size: 1rem;
+          color: #111827;
+        }
+
+        .officials-list {
+          list-style: none;
+          padding: 0;
+          margin: 0 0 12px 0;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          font-size: 0.9rem;
+          color: #374151;
+        }
+
+        .year-badge {
+          margin-top: 12px;
+          font-weight: 700;
+          font-size: 1.25rem;
+          color: #4361ee;
+        }
+
         .messages-container {
           flex: 1;
-          padding: 1rem;
+          padding: 1rem 0;
           overflow-y: auto;
           display: flex;
           flex-direction: column;
@@ -377,13 +446,26 @@ export default function ChatbotPage() {
           height: 24px;
         }
 
+        @media (max-width: 1024px) {
+          .desktop-sidebar {
+            display: none;
+          }
+          .messages-container {
+            padding: 0.5rem 0.2rem;
+          }
+        }
+
+        @media (min-width: 1025px) {
+          .desktop-sidebar {
+            display: block;
+          }
+          .page-wrapper { gap: 16px; padding: 0 16px; }
+        }
+
         @media (max-width: 768px) {
           .chat-container {
             max-width: 100vw;
             padding: 0;
-          }
-          .messages-container {
-            padding: 0.5rem 0.2rem;
           }
           .input-area {
             padding: 0.5rem 0.2rem;

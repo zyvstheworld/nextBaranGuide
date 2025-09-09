@@ -1,211 +1,176 @@
-"use strict";(()=>{var e={};e.id=29,e.ids=[29],e.modules={517:e=>{e.exports=require("next/dist/compiled/next-server/app-route.runtime.prod.js")},4300:e=>{e.exports=require("buffer")},6113:e=>{e.exports=require("crypto")},2361:e=>{e.exports=require("events")},3685:e=>{e.exports=require("http")},5687:e=>{e.exports=require("https")},1808:e=>{e.exports=require("net")},5477:e=>{e.exports=require("punycode")},2781:e=>{e.exports=require("stream")},4404:e=>{e.exports=require("tls")},7310:e=>{e.exports=require("url")},9796:e=>{e.exports=require("zlib")},2826:(e,t,n)=>{n.r(t),n.d(t,{headerHooks:()=>ed,originalPathname:()=>eh,patchFetch:()=>ef,requestAsyncStorage:()=>ea,routeModule:()=>er,serverHooks:()=>el,staticGenerationAsyncStorage:()=>ec,staticGenerationBailout:()=>eu});var s,o,i,r,a,c,l,d,u,h,f,g,p={};n.r(p),n.d(p,{POST:()=>ei});var m=n(5419),E=n(9108),C=n(9678),y=n(8070);(function(e){e.STRING="string",e.NUMBER="number",e.INTEGER="integer",e.BOOLEAN="boolean",e.ARRAY="array",e.OBJECT="object"})(s||(s={})),function(e){e.LANGUAGE_UNSPECIFIED="language_unspecified",e.PYTHON="python"}(o||(o={})),function(e){e.OUTCOME_UNSPECIFIED="outcome_unspecified",e.OUTCOME_OK="outcome_ok",e.OUTCOME_FAILED="outcome_failed",e.OUTCOME_DEADLINE_EXCEEDED="outcome_deadline_exceeded"}(i||(i={}));/**
- * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */let O=["user","model","function","system"];(function(e){e.HARM_CATEGORY_UNSPECIFIED="HARM_CATEGORY_UNSPECIFIED",e.HARM_CATEGORY_HATE_SPEECH="HARM_CATEGORY_HATE_SPEECH",e.HARM_CATEGORY_SEXUALLY_EXPLICIT="HARM_CATEGORY_SEXUALLY_EXPLICIT",e.HARM_CATEGORY_HARASSMENT="HARM_CATEGORY_HARASSMENT",e.HARM_CATEGORY_DANGEROUS_CONTENT="HARM_CATEGORY_DANGEROUS_CONTENT",e.HARM_CATEGORY_CIVIC_INTEGRITY="HARM_CATEGORY_CIVIC_INTEGRITY"})(r||(r={})),function(e){e.HARM_BLOCK_THRESHOLD_UNSPECIFIED="HARM_BLOCK_THRESHOLD_UNSPECIFIED",e.BLOCK_LOW_AND_ABOVE="BLOCK_LOW_AND_ABOVE",e.BLOCK_MEDIUM_AND_ABOVE="BLOCK_MEDIUM_AND_ABOVE",e.BLOCK_ONLY_HIGH="BLOCK_ONLY_HIGH",e.BLOCK_NONE="BLOCK_NONE"}(a||(a={})),function(e){e.HARM_PROBABILITY_UNSPECIFIED="HARM_PROBABILITY_UNSPECIFIED",e.NEGLIGIBLE="NEGLIGIBLE",e.LOW="LOW",e.MEDIUM="MEDIUM",e.HIGH="HIGH"}(c||(c={})),function(e){e.BLOCKED_REASON_UNSPECIFIED="BLOCKED_REASON_UNSPECIFIED",e.SAFETY="SAFETY",e.OTHER="OTHER"}(l||(l={})),function(e){e.FINISH_REASON_UNSPECIFIED="FINISH_REASON_UNSPECIFIED",e.STOP="STOP",e.MAX_TOKENS="MAX_TOKENS",e.SAFETY="SAFETY",e.RECITATION="RECITATION",e.LANGUAGE="LANGUAGE",e.BLOCKLIST="BLOCKLIST",e.PROHIBITED_CONTENT="PROHIBITED_CONTENT",e.SPII="SPII",e.MALFORMED_FUNCTION_CALL="MALFORMED_FUNCTION_CALL",e.OTHER="OTHER"}(d||(d={})),function(e){e.TASK_TYPE_UNSPECIFIED="TASK_TYPE_UNSPECIFIED",e.RETRIEVAL_QUERY="RETRIEVAL_QUERY",e.RETRIEVAL_DOCUMENT="RETRIEVAL_DOCUMENT",e.SEMANTIC_SIMILARITY="SEMANTIC_SIMILARITY",e.CLASSIFICATION="CLASSIFICATION",e.CLUSTERING="CLUSTERING"}(u||(u={})),function(e){e.MODE_UNSPECIFIED="MODE_UNSPECIFIED",e.AUTO="AUTO",e.ANY="ANY",e.NONE="NONE"}(h||(h={})),function(e){e.MODE_UNSPECIFIED="MODE_UNSPECIFIED",e.MODE_DYNAMIC="MODE_DYNAMIC"}(f||(f={}));/**
- * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */class I extends Error{constructor(e){super(`[GoogleGenerativeAI Error]: ${e}`)}}class v extends I{constructor(e,t){super(e),this.response=t}}class _ extends I{constructor(e,t,n,s){super(e),this.status=t,this.statusText=n,this.errorDetails=s}}class T extends I{}class A extends I{}!function(e){e.GENERATE_CONTENT="generateContent",e.STREAM_GENERATE_CONTENT="streamGenerateContent",e.COUNT_TOKENS="countTokens",e.EMBED_CONTENT="embedContent",e.BATCH_EMBED_CONTENTS="batchEmbedContents"}(g||(g={}));class w{constructor(e,t,n,s,o){this.model=e,this.task=t,this.apiKey=n,this.stream=s,this.requestOptions=o}toString(){var e,t;let n=(null===(e=this.requestOptions)||void 0===e?void 0:e.apiVersion)||"v1beta",s=(null===(t=this.requestOptions)||void 0===t?void 0:t.baseUrl)||"https://generativelanguage.googleapis.com",o=`${s}/${n}/${this.model}:${this.task}`;return this.stream&&(o+="?alt=sse"),o}}async function b(e){var t;let n=new Headers;n.append("Content-Type","application/json"),n.append("x-goog-api-client",function(e){let t=[];return(null==e?void 0:e.apiClient)&&t.push(e.apiClient),t.push("genai-js/0.24.1"),t.join(" ")}(e.requestOptions)),n.append("x-goog-api-key",e.apiKey);let s=null===(t=e.requestOptions)||void 0===t?void 0:t.customHeaders;if(s){if(!(s instanceof Headers))try{s=new Headers(s)}catch(e){throw new T(`unable to convert customHeaders value ${JSON.stringify(s)} to Headers: ${e.message}`)}for(let[e,t]of s.entries()){if("x-goog-api-key"===e)throw new T(`Cannot set reserved header name ${e}`);if("x-goog-api-client"===e)throw new T(`Header name ${e} can only be set using the apiClient field`);n.append(e,t)}}return n}async function N(e,t,n,s,o,i){let r=new w(e,t,n,s,i);return{url:r.toString(),fetchOptions:Object.assign(Object.assign({},function(e){let t={};if((null==e?void 0:e.signal)!==void 0||(null==e?void 0:e.timeout)>=0){let n=new AbortController;(null==e?void 0:e.timeout)>=0&&setTimeout(()=>n.abort(),e.timeout),(null==e?void 0:e.signal)&&e.signal.addEventListener("abort",()=>{n.abort()}),t.signal=n.signal}return t}(i)),{method:"POST",headers:await b(r),body:o})}}async function R(e,t,n,s,o,i={},r=fetch){let{url:a,fetchOptions:c}=await N(e,t,n,s,o,i);return S(a,c,r)}async function S(e,t,n=fetch){let s;try{s=await n(e,t)}catch(t){(function(e,t){let n=e;throw"AbortError"===n.name?(n=new A(`Request aborted when fetching ${t.toString()}: ${e.message}`)).stack=e.stack:e instanceof _||e instanceof T||((n=new I(`Error fetching from ${t.toString()}: ${e.message}`)).stack=e.stack),n})(t,e)}return s.ok||await M(s,e),s}async function M(e,t){let n,s="";try{let t=await e.json();s=t.error.message,t.error.details&&(s+=` ${JSON.stringify(t.error.details)}`,n=t.error.details)}catch(e){}throw new _(`Error fetching from ${t.toString()}: [${e.status} ${e.statusText}] ${s}`,e.status,e.statusText,n)}/**
- * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */function x(e){return e.text=()=>{if(e.candidates&&e.candidates.length>0){if(e.candidates.length>1&&console.warn(`This response had ${e.candidates.length} candidates. Returning text from the first candidate only. Access response.candidates directly to use the other candidates.`),L(e.candidates[0]))throw new v(`${q(e)}`,e);return function(e){var t,n,s,o;let i=[];if(null===(n=null===(t=e.candidates)||void 0===t?void 0:t[0].content)||void 0===n?void 0:n.parts)for(let t of null===(o=null===(s=e.candidates)||void 0===s?void 0:s[0].content)||void 0===o?void 0:o.parts)t.text&&i.push(t.text),t.executableCode&&i.push("\n```"+t.executableCode.language+"\n"+t.executableCode.code+"\n```\n"),t.codeExecutionResult&&i.push("\n```\n"+t.codeExecutionResult.output+"\n```\n");return i.length>0?i.join(""):""}(e)}if(e.promptFeedback)throw new v(`Text not available. ${q(e)}`,e);return""},e.functionCall=()=>{if(e.candidates&&e.candidates.length>0){if(e.candidates.length>1&&console.warn(`This response had ${e.candidates.length} candidates. Returning function calls from the first candidate only. Access response.candidates directly to use the other candidates.`),L(e.candidates[0]))throw new v(`${q(e)}`,e);return console.warn("response.functionCall() is deprecated. Use response.functionCalls() instead."),D(e)[0]}if(e.promptFeedback)throw new v(`Function call not available. ${q(e)}`,e)},e.functionCalls=()=>{if(e.candidates&&e.candidates.length>0){if(e.candidates.length>1&&console.warn(`This response had ${e.candidates.length} candidates. Returning function calls from the first candidate only. Access response.candidates directly to use the other candidates.`),L(e.candidates[0]))throw new v(`${q(e)}`,e);return D(e)}if(e.promptFeedback)throw new v(`Function call not available. ${q(e)}`,e)},e}function D(e){var t,n,s,o;let i=[];if(null===(n=null===(t=e.candidates)||void 0===t?void 0:t[0].content)||void 0===n?void 0:n.parts)for(let t of null===(o=null===(s=e.candidates)||void 0===s?void 0:s[0].content)||void 0===o?void 0:o.parts)t.functionCall&&i.push(t.functionCall);return i.length>0?i:void 0}let P=[d.RECITATION,d.SAFETY,d.LANGUAGE];function L(e){return!!e.finishReason&&P.includes(e.finishReason)}function q(e){var t,n,s;let o="";if((!e.candidates||0===e.candidates.length)&&e.promptFeedback)o+="Response was blocked",(null===(t=e.promptFeedback)||void 0===t?void 0:t.blockReason)&&(o+=` due to ${e.promptFeedback.blockReason}`),(null===(n=e.promptFeedback)||void 0===n?void 0:n.blockReasonMessage)&&(o+=`: ${e.promptFeedback.blockReasonMessage}`);else if(null===(s=e.candidates)||void 0===s?void 0:s[0]){let t=e.candidates[0];L(t)&&(o+=`Candidate was blocked due to ${t.finishReason}`,t.finishMessage&&(o+=`: ${t.finishMessage}`))}return o}function F(e){return this instanceof F?(this.v=e,this):new F(e)}"function"==typeof SuppressedError&&SuppressedError;/**
- * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */let G=/^data\: (.*)(?:\n\n|\r\r|\r\n\r\n)/;async function U(e){let t=[],n=e.getReader();for(;;){let{done:e,value:s}=await n.read();if(e)return x(function(e){let t=e[e.length-1],n={promptFeedback:null==t?void 0:t.promptFeedback};for(let t of e){if(t.candidates){let e=0;for(let s of t.candidates)if(n.candidates||(n.candidates=[]),n.candidates[e]||(n.candidates[e]={index:e}),n.candidates[e].citationMetadata=s.citationMetadata,n.candidates[e].groundingMetadata=s.groundingMetadata,n.candidates[e].finishReason=s.finishReason,n.candidates[e].finishMessage=s.finishMessage,n.candidates[e].safetyRatings=s.safetyRatings,s.content&&s.content.parts){n.candidates[e].content||(n.candidates[e].content={role:s.content.role||"user",parts:[]});let t={};for(let o of s.content.parts)o.text&&(t.text=o.text),o.functionCall&&(t.functionCall=o.functionCall),o.executableCode&&(t.executableCode=o.executableCode),o.codeExecutionResult&&(t.codeExecutionResult=o.codeExecutionResult),0===Object.keys(t).length&&(t.text=""),n.candidates[e].content.parts.push(t)}e++}t.usageMetadata&&(n.usageMetadata=t.usageMetadata)}return n}(t));t.push(s)}}/**
- * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */async function H(e,t,n,s){return function(e){let[t,n]=(function(e){let t=e.getReader();return new ReadableStream({start(e){let n="";return function s(){return t.read().then(({value:t,done:o})=>{let i;if(o){if(n.trim()){e.error(new I("Failed to parse stream"));return}e.close();return}let r=(n+=t).match(G);for(;r;){try{i=JSON.parse(r[1])}catch(t){e.error(new I(`Error parsing JSON response: "${r[1]}"`));return}e.enqueue(i),r=(n=n.substring(r[0].length)).match(G)}return s()}).catch(e=>{let t=e;throw t.stack=e.stack,t="AbortError"===t.name?new A("Request aborted when reading from the stream"):new I("Error reading from the stream")})}()}})})(e.body.pipeThrough(new TextDecoderStream("utf8",{fatal:!0}))).tee();return{stream:function(e){return function(e,t,n){if(!Symbol.asyncIterator)throw TypeError("Symbol.asyncIterator is not defined.");var s,o=n.apply(e,t||[]),i=[];return s={},r("next"),r("throw"),r("return"),s[Symbol.asyncIterator]=function(){return this},s;function r(e){o[e]&&(s[e]=function(t){return new Promise(function(n,s){i.push([e,t,n,s])>1||a(e,t)})})}function a(e,t){try{var n;(n=o[e](t)).value instanceof F?Promise.resolve(n.value.v).then(c,l):d(i[0][2],n)}catch(e){d(i[0][3],e)}}function c(e){a("next",e)}function l(e){a("throw",e)}function d(e,t){e(t),i.shift(),i.length&&a(i[0][0],i[0][1])}}(this,arguments,function*(){let t=e.getReader();for(;;){let{value:e,done:n}=yield F(t.read());if(n)break;yield yield F(x(e))}})}(t),response:U(n)}}(await R(t,g.STREAM_GENERATE_CONTENT,e,!0,JSON.stringify(n),s))}async function $(e,t,n,s){let o=await R(t,g.GENERATE_CONTENT,e,!1,JSON.stringify(n),s);return{response:x(await o.json())}}/**
- * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */function j(e){if(null!=e){if("string"==typeof e)return{role:"system",parts:[{text:e}]};if(e.text)return{role:"system",parts:[e]};if(e.parts)return e.role?e:{role:"system",parts:e.parts}}}function k(e){let t=[];if("string"==typeof e)t=[{text:e}];else for(let n of e)"string"==typeof n?t.push({text:n}):t.push(n);return function(e){let t={role:"user",parts:[]},n={role:"function",parts:[]},s=!1,o=!1;for(let i of e)"functionResponse"in i?(n.parts.push(i),o=!0):(t.parts.push(i),s=!0);if(s&&o)throw new I("Within a single message, FunctionResponse cannot be mixed with other type of part in the request for sending chat message.");if(!s&&!o)throw new I("No content is provided for sending chat message.");return s?t:n}(t)}function Y(e){let t;return t=e.contents?e:{contents:[k(e)]},e.systemInstruction&&(t.systemInstruction=j(e.systemInstruction)),t}/**
- * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */let B=["text","inlineData","functionCall","functionResponse","executableCode","codeExecutionResult"],K={user:["text","inlineData"],function:["functionResponse"],model:["text","functionCall","executableCode","codeExecutionResult"],system:["text"]};function J(e){var t;if(void 0===e.candidates||0===e.candidates.length)return!1;let n=null===(t=e.candidates[0])||void 0===t?void 0:t.content;if(void 0===n||void 0===n.parts||0===n.parts.length)return!1;for(let e of n.parts)if(void 0===e||0===Object.keys(e).length||void 0!==e.text&&""===e.text)return!1;return!0}/**
- * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */let V="SILENT_ERROR";class z{constructor(e,t,n,s={}){this.model=t,this.params=n,this._requestOptions=s,this._history=[],this._sendPromise=Promise.resolve(),this._apiKey=e,(null==n?void 0:n.history)&&(function(e){let t=!1;for(let n of e){let{role:e,parts:s}=n;if(!t&&"user"!==e)throw new I(`First content should be with role 'user', got ${e}`);if(!O.includes(e))throw new I(`Each item should include role field. Got ${e} but valid roles are: ${JSON.stringify(O)}`);if(!Array.isArray(s))throw new I("Content should have 'parts' property with an array of Parts");if(0===s.length)throw new I("Each Content should have at least one part");let o={text:0,inlineData:0,functionCall:0,functionResponse:0,fileData:0,executableCode:0,codeExecutionResult:0};for(let e of s)for(let t of B)t in e&&(o[t]+=1);let i=K[e];for(let t of B)if(!i.includes(t)&&o[t]>0)throw new I(`Content with role '${e}' can't contain '${t}' part`);t=!0}}(n.history),this._history=n.history)}async getHistory(){return await this._sendPromise,this._history}async sendMessage(e,t={}){var n,s,o,i,r,a;let c;await this._sendPromise;let l=k(e),d={safetySettings:null===(n=this.params)||void 0===n?void 0:n.safetySettings,generationConfig:null===(s=this.params)||void 0===s?void 0:s.generationConfig,tools:null===(o=this.params)||void 0===o?void 0:o.tools,toolConfig:null===(i=this.params)||void 0===i?void 0:i.toolConfig,systemInstruction:null===(r=this.params)||void 0===r?void 0:r.systemInstruction,cachedContent:null===(a=this.params)||void 0===a?void 0:a.cachedContent,contents:[...this._history,l]},u=Object.assign(Object.assign({},this._requestOptions),t);return this._sendPromise=this._sendPromise.then(()=>$(this._apiKey,this.model,d,u)).then(e=>{var t;if(J(e.response)){this._history.push(l);let n=Object.assign({parts:[],role:"model"},null===(t=e.response.candidates)||void 0===t?void 0:t[0].content);this._history.push(n)}else{let t=q(e.response);t&&console.warn(`sendMessage() was unsuccessful. ${t}. Inspect response object for details.`)}c=e}).catch(e=>{throw this._sendPromise=Promise.resolve(),e}),await this._sendPromise,c}async sendMessageStream(e,t={}){var n,s,o,i,r,a;await this._sendPromise;let c=k(e),l={safetySettings:null===(n=this.params)||void 0===n?void 0:n.safetySettings,generationConfig:null===(s=this.params)||void 0===s?void 0:s.generationConfig,tools:null===(o=this.params)||void 0===o?void 0:o.tools,toolConfig:null===(i=this.params)||void 0===i?void 0:i.toolConfig,systemInstruction:null===(r=this.params)||void 0===r?void 0:r.systemInstruction,cachedContent:null===(a=this.params)||void 0===a?void 0:a.cachedContent,contents:[...this._history,c]},d=Object.assign(Object.assign({},this._requestOptions),t),u=H(this._apiKey,this.model,l,d);return this._sendPromise=this._sendPromise.then(()=>u).catch(e=>{throw Error(V)}).then(e=>e.response).then(e=>{if(J(e)){this._history.push(c);let t=Object.assign({},e.candidates[0].content);t.role||(t.role="model"),this._history.push(t)}else{let t=q(e);t&&console.warn(`sendMessageStream() was unsuccessful. ${t}. Inspect response object for details.`)}}).catch(e=>{e.message!==V&&console.error(e)}),u}}/**
- * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */async function W(e,t,n,s){return(await R(t,g.COUNT_TOKENS,e,!1,JSON.stringify(n),s)).json()}/**
- * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */async function X(e,t,n,s){return(await R(t,g.EMBED_CONTENT,e,!1,JSON.stringify(n),s)).json()}async function Z(e,t,n,s){let o=n.requests.map(e=>Object.assign(Object.assign({},e),{model:t}));return(await R(t,g.BATCH_EMBED_CONTENTS,e,!1,JSON.stringify({requests:o}),s)).json()}/**
- * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */class Q{constructor(e,t,n={}){this.apiKey=e,this._requestOptions=n,t.model.includes("/")?this.model=t.model:this.model=`models/${t.model}`,this.generationConfig=t.generationConfig||{},this.safetySettings=t.safetySettings||[],this.tools=t.tools,this.toolConfig=t.toolConfig,this.systemInstruction=j(t.systemInstruction),this.cachedContent=t.cachedContent}async generateContent(e,t={}){var n;let s=Y(e),o=Object.assign(Object.assign({},this._requestOptions),t);return $(this.apiKey,this.model,Object.assign({generationConfig:this.generationConfig,safetySettings:this.safetySettings,tools:this.tools,toolConfig:this.toolConfig,systemInstruction:this.systemInstruction,cachedContent:null===(n=this.cachedContent)||void 0===n?void 0:n.name},s),o)}async generateContentStream(e,t={}){var n;let s=Y(e),o=Object.assign(Object.assign({},this._requestOptions),t);return H(this.apiKey,this.model,Object.assign({generationConfig:this.generationConfig,safetySettings:this.safetySettings,tools:this.tools,toolConfig:this.toolConfig,systemInstruction:this.systemInstruction,cachedContent:null===(n=this.cachedContent)||void 0===n?void 0:n.name},s),o)}startChat(e){var t;return new z(this.apiKey,this.model,Object.assign({generationConfig:this.generationConfig,safetySettings:this.safetySettings,tools:this.tools,toolConfig:this.toolConfig,systemInstruction:this.systemInstruction,cachedContent:null===(t=this.cachedContent)||void 0===t?void 0:t.name},e),this._requestOptions)}async countTokens(e,t={}){let n=function(e,t){var n;let s={model:null==t?void 0:t.model,generationConfig:null==t?void 0:t.generationConfig,safetySettings:null==t?void 0:t.safetySettings,tools:null==t?void 0:t.tools,toolConfig:null==t?void 0:t.toolConfig,systemInstruction:null==t?void 0:t.systemInstruction,cachedContent:null===(n=null==t?void 0:t.cachedContent)||void 0===n?void 0:n.name,contents:[]},o=null!=e.generateContentRequest;if(e.contents){if(o)throw new T("CountTokensRequest must have one of contents or generateContentRequest, not both.");s.contents=e.contents}else if(o)s=Object.assign(Object.assign({},s),e.generateContentRequest);else{let t=k(e);s.contents=[t]}return{generateContentRequest:s}}(e,{model:this.model,generationConfig:this.generationConfig,safetySettings:this.safetySettings,tools:this.tools,toolConfig:this.toolConfig,systemInstruction:this.systemInstruction,cachedContent:this.cachedContent}),s=Object.assign(Object.assign({},this._requestOptions),t);return W(this.apiKey,this.model,n,s)}async embedContent(e,t={}){let n="string"==typeof e||Array.isArray(e)?{content:k(e)}:e,s=Object.assign(Object.assign({},this._requestOptions),t);return X(this.apiKey,this.model,n,s)}async batchEmbedContents(e,t={}){let n=Object.assign(Object.assign({},this._requestOptions),t);return Z(this.apiKey,this.model,e,n)}}/**
- * @license
- * Copyright 2024 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */class ee{constructor(e){this.apiKey=e}getGenerativeModel(e,t){if(!e.model)throw new I("Must provide a model name. Example: genai.getGenerativeModel({ model: 'my-model-name' })");return new Q(this.apiKey,e,t)}getGenerativeModelFromCachedContent(e,t,n){if(!e.name)throw new T("Cached content must contain a `name` field.");if(!e.model)throw new T("Cached content must contain a `model` field.");for(let n of["model","systemInstruction"])if((null==t?void 0:t[n])&&e[n]&&(null==t?void 0:t[n])!==e[n]){if("model"===n&&(t.model.startsWith("models/")?t.model.replace("models/",""):t.model)===(e.model.startsWith("models/")?e.model.replace("models/",""):e.model))continue;throw new T(`Different value for "${n}" specified in modelParams (${t[n]}) and cachedContent (${e[n]})`)}let s=Object.assign(Object.assign({},t),{model:e.model,tools:e.tools,toolConfig:e.toolConfig,systemInstruction:e.systemInstruction,cachedContent:e});return new Q(this.apiKey,s,n)}}var et=n(6517);let en=new ee(process.env.GEMINI_API_KEY||"").getGenerativeModel({model:"gemini-2.0-flash"});async function es(){try{let{data:e,error:t}=await et.O.from("services").select("*"),{data:n,error:s}=await et.O.from("faqs").select("*");if(t||s)return console.error("Error fetching context:",t||s),"";let o="Here's information about our barangay services and frequently asked questions:\n\n";return o+="SERVICES:\n",e?.forEach(e=>{o+=`Service: ${e.title}
-Requirements: ${e.requirements}
-Fee: ${e.price}
-Duration: ${e.duration}
+"use strict";
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+(() => {
+var exports = {};
+exports.id = "app/api/chatbot/message/route";
+exports.ids = ["app/api/chatbot/message/route"];
+exports.modules = {
 
-`}),o+="FREQUENTLY ASKED QUESTIONS:\n",n?.forEach(e=>{o+=`Q: ${e.question}
-A: ${e.answer}
+/***/ "next/dist/compiled/next-server/app-route.runtime.dev.js":
+/*!**************************************************************************!*\
+  !*** external "next/dist/compiled/next-server/app-route.runtime.dev.js" ***!
+  \**************************************************************************/
+/***/ ((module) => {
 
-`}),o}catch(e){return console.error("Error getting database context:",e),""}}async function eo(e=5){try{let{data:t,error:n}=await et.O.from("messages").select("*").order("created_at",{ascending:!1}).limit(e);if(n)return console.error("Error fetching conversation history:",n),[];return t?.reverse()||[]}catch(e){return console.error("Error getting conversation history:",e),[]}}async function ei(e){try{let{message:t}=await e.json();if(!t)return y.Z.json({error:"Message is required"},{status:400});let n=await es(),s=await eo(),o="";s.length>0&&(o="Previous conversation:\n",s.forEach(e=>{o+=`${"user"===e.sender?"User":"Assistant"}: ${e.content}
-`}),o+="\n");let i=`You are BaranGuide, a helpful assistant for barangay-related inquiries in the Philippines. 
-You help citizens navigate barangay services, requirements, fees, and procedures.
-You should be polite, informative, and provide specific information about barangay services.
-If you don't know the answer to a question, please say so and suggest they visit the barangay office.
-Use Filipino phrases occasionally to sound more friendly and approachable. But answer in English if the question is in English.
-Keep your answers concise and directly address the user's question.
-Your responses should be helpful for Filipino citizens who are trying to navigate barangay procedures.
+module.exports = require("next/dist/compiled/next-server/app-route.runtime.dev.js");
 
-When users ask about requirements for a service, provide a clear list of all requirements.
-When users ask where to get the requirements, provide specific locations or offices where they can obtain each requirement.
-For example, if a requirement is a birth certificate, specify that they can get it from the PSA (Philippine Statistics Authority) or their local civil registry office.
-If a requirement is a barangay clearance, specify that they can get it from their barangay office.
+/***/ }),
 
-Below is information about the specific services and FAQs available in this barangay:
+/***/ "buffer":
+/*!*************************!*\
+  !*** external "buffer" ***!
+  \*************************/
+/***/ ((module) => {
 
-${n}
+module.exports = require("buffer");
 
-${o}
+/***/ }),
 
-Please respond to the following message from a citizen:`,r=`${i}
+/***/ "crypto":
+/*!*************************!*\
+  !*** external "crypto" ***!
+  \*************************/
+/***/ ((module) => {
 
-User: ${t}`;try{let e=(await en.generateContent(r)).response.text().replace(/\*/g,"");return await et.O.from("messages").insert([{sender:"user",content:t},{sender:"bot",content:e}]),y.Z.json({data:{response:e}})}catch(n){console.error("Error with Gemini API:",n);let e="I'm sorry, I'm having trouble connecting to my knowledge base right now. Please try again in a moment or visit your local Barangay office for immediate assistance.";return await et.O.from("messages").insert([{sender:"user",content:t},{sender:"bot",content:e,is_error:!0}]),y.Z.json({data:{response:e}})}}catch(e){return console.error("Error generating chat response:",e),y.Z.json({error:"Internal server error"},{status:500})}}let er=new m.AppRouteRouteModule({definition:{kind:E.x.APP_ROUTE,page:"/api/chatbot/message/route",pathname:"/api/chatbot/message",filename:"route",bundlePath:"app/api/chatbot/message/route"},resolvedPagePath:"C:\\xampp\\htdocs\\nextBaranGuide\\src\\app\\api\\chatbot\\message\\route.ts",nextConfigOutput:"",userland:p}),{requestAsyncStorage:ea,staticGenerationAsyncStorage:ec,serverHooks:el,headerHooks:ed,staticGenerationBailout:eu}=er,eh="/api/chatbot/message/route";function ef(){return(0,C.patchFetch)({serverHooks:el,staticGenerationAsyncStorage:ec})}},6517:(e,t,n)=>{n.d(t,{O:()=>s});let s=(0,n(6323).eI)("https://eonpmgddebdrepweoznd.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvbnBtZ2RkZWJkcmVwd2Vvem5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2NzAwMDcsImV4cCI6MjA2MzI0NjAwN30.Q6dU6LOsWDcG89sz06GtseJ9k0zc_qzy2Prt1opSzT4")}};var t=require("../../../../webpack-runtime.js");t.C(e);var n=e=>t(t.s=e),s=t.X(0,[638,246],()=>n(2826));module.exports=s})();
+module.exports = require("crypto");
+
+/***/ }),
+
+/***/ "events":
+/*!*************************!*\
+  !*** external "events" ***!
+  \*************************/
+/***/ ((module) => {
+
+module.exports = require("events");
+
+/***/ }),
+
+/***/ "http":
+/*!***********************!*\
+  !*** external "http" ***!
+  \***********************/
+/***/ ((module) => {
+
+module.exports = require("http");
+
+/***/ }),
+
+/***/ "https":
+/*!************************!*\
+  !*** external "https" ***!
+  \************************/
+/***/ ((module) => {
+
+module.exports = require("https");
+
+/***/ }),
+
+/***/ "net":
+/*!**********************!*\
+  !*** external "net" ***!
+  \**********************/
+/***/ ((module) => {
+
+module.exports = require("net");
+
+/***/ }),
+
+/***/ "punycode":
+/*!***************************!*\
+  !*** external "punycode" ***!
+  \***************************/
+/***/ ((module) => {
+
+module.exports = require("punycode");
+
+/***/ }),
+
+/***/ "stream":
+/*!*************************!*\
+  !*** external "stream" ***!
+  \*************************/
+/***/ ((module) => {
+
+module.exports = require("stream");
+
+/***/ }),
+
+/***/ "tls":
+/*!**********************!*\
+  !*** external "tls" ***!
+  \**********************/
+/***/ ((module) => {
+
+module.exports = require("tls");
+
+/***/ }),
+
+/***/ "url":
+/*!**********************!*\
+  !*** external "url" ***!
+  \**********************/
+/***/ ((module) => {
+
+module.exports = require("url");
+
+/***/ }),
+
+/***/ "zlib":
+/*!***********************!*\
+  !*** external "zlib" ***!
+  \***********************/
+/***/ ((module) => {
+
+module.exports = require("zlib");
+
+/***/ }),
+
+/***/ "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fchatbot%2Fmessage%2Froute&page=%2Fapi%2Fchatbot%2Fmessage%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fchatbot%2Fmessage%2Froute.ts&appDir=C%3A%5Cxampp%5Chtdocs%5CnextBaranGuide%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5Cxampp%5Chtdocs%5CnextBaranGuide&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fchatbot%2Fmessage%2Froute&page=%2Fapi%2Fchatbot%2Fmessage%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fchatbot%2Fmessage%2Froute.ts&appDir=C%3A%5Cxampp%5Chtdocs%5CnextBaranGuide%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5Cxampp%5Chtdocs%5CnextBaranGuide&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D! ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   headerHooks: () => (/* binding */ headerHooks),\n/* harmony export */   originalPathname: () => (/* binding */ originalPathname),\n/* harmony export */   patchFetch: () => (/* binding */ patchFetch),\n/* harmony export */   requestAsyncStorage: () => (/* binding */ requestAsyncStorage),\n/* harmony export */   routeModule: () => (/* binding */ routeModule),\n/* harmony export */   serverHooks: () => (/* binding */ serverHooks),\n/* harmony export */   staticGenerationAsyncStorage: () => (/* binding */ staticGenerationAsyncStorage),\n/* harmony export */   staticGenerationBailout: () => (/* binding */ staticGenerationBailout)\n/* harmony export */ });\n/* harmony import */ var next_dist_server_future_route_modules_app_route_module_compiled__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! next/dist/server/future/route-modules/app-route/module.compiled */ \"(rsc)/./node_modules/next/dist/server/future/route-modules/app-route/module.compiled.js\");\n/* harmony import */ var next_dist_server_future_route_modules_app_route_module_compiled__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(next_dist_server_future_route_modules_app_route_module_compiled__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var next_dist_server_future_route_kind__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next/dist/server/future/route-kind */ \"(rsc)/./node_modules/next/dist/server/future/route-kind.js\");\n/* harmony import */ var next_dist_server_lib_patch_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/dist/server/lib/patch-fetch */ \"(rsc)/./node_modules/next/dist/server/lib/patch-fetch.js\");\n/* harmony import */ var next_dist_server_lib_patch_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_dist_server_lib_patch_fetch__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var C_xampp_htdocs_nextBaranGuide_src_app_api_chatbot_message_route_ts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./src/app/api/chatbot/message/route.ts */ \"(rsc)/./src/app/api/chatbot/message/route.ts\");\n\n\n\n\n// We inject the nextConfigOutput here so that we can use them in the route\n// module.\nconst nextConfigOutput = \"\"\nconst routeModule = new next_dist_server_future_route_modules_app_route_module_compiled__WEBPACK_IMPORTED_MODULE_0__.AppRouteRouteModule({\n    definition: {\n        kind: next_dist_server_future_route_kind__WEBPACK_IMPORTED_MODULE_1__.RouteKind.APP_ROUTE,\n        page: \"/api/chatbot/message/route\",\n        pathname: \"/api/chatbot/message\",\n        filename: \"route\",\n        bundlePath: \"app/api/chatbot/message/route\"\n    },\n    resolvedPagePath: \"C:\\\\xampp\\\\htdocs\\\\nextBaranGuide\\\\src\\\\app\\\\api\\\\chatbot\\\\message\\\\route.ts\",\n    nextConfigOutput,\n    userland: C_xampp_htdocs_nextBaranGuide_src_app_api_chatbot_message_route_ts__WEBPACK_IMPORTED_MODULE_3__\n});\n// Pull out the exports that we need to expose from the module. This should\n// be eliminated when we've moved the other routes to the new format. These\n// are used to hook into the route.\nconst { requestAsyncStorage, staticGenerationAsyncStorage, serverHooks, headerHooks, staticGenerationBailout } = routeModule;\nconst originalPathname = \"/api/chatbot/message/route\";\nfunction patchFetch() {\n    return (0,next_dist_server_lib_patch_fetch__WEBPACK_IMPORTED_MODULE_2__.patchFetch)({\n        serverHooks,\n        staticGenerationAsyncStorage\n    });\n}\n\n\n//# sourceMappingURL=app-route.js.map//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9ub2RlX21vZHVsZXMvbmV4dC9kaXN0L2J1aWxkL3dlYnBhY2svbG9hZGVycy9uZXh0LWFwcC1sb2FkZXIuanM/bmFtZT1hcHAlMkZhcGklMkZjaGF0Ym90JTJGbWVzc2FnZSUyRnJvdXRlJnBhZ2U9JTJGYXBpJTJGY2hhdGJvdCUyRm1lc3NhZ2UlMkZyb3V0ZSZhcHBQYXRocz0mcGFnZVBhdGg9cHJpdmF0ZS1uZXh0LWFwcC1kaXIlMkZhcGklMkZjaGF0Ym90JTJGbWVzc2FnZSUyRnJvdXRlLnRzJmFwcERpcj1DJTNBJTVDeGFtcHAlNUNodGRvY3MlNUNuZXh0QmFyYW5HdWlkZSU1Q3NyYyU1Q2FwcCZwYWdlRXh0ZW5zaW9ucz10c3gmcGFnZUV4dGVuc2lvbnM9dHMmcGFnZUV4dGVuc2lvbnM9anN4JnBhZ2VFeHRlbnNpb25zPWpzJnJvb3REaXI9QyUzQSU1Q3hhbXBwJTVDaHRkb2NzJTVDbmV4dEJhcmFuR3VpZGUmaXNEZXY9dHJ1ZSZ0c2NvbmZpZ1BhdGg9dHNjb25maWcuanNvbiZiYXNlUGF0aD0mYXNzZXRQcmVmaXg9Jm5leHRDb25maWdPdXRwdXQ9JnByZWZlcnJlZFJlZ2lvbj0mbWlkZGxld2FyZUNvbmZpZz1lMzAlM0QhIiwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQXNHO0FBQ3ZDO0FBQ2M7QUFDNEI7QUFDekc7QUFDQTtBQUNBO0FBQ0Esd0JBQXdCLGdIQUFtQjtBQUMzQztBQUNBLGNBQWMseUVBQVM7QUFDdkI7QUFDQTtBQUNBO0FBQ0E7QUFDQSxLQUFLO0FBQ0w7QUFDQTtBQUNBLFlBQVk7QUFDWixDQUFDO0FBQ0Q7QUFDQTtBQUNBO0FBQ0EsUUFBUSx1R0FBdUc7QUFDL0c7QUFDQTtBQUNBLFdBQVcsNEVBQVc7QUFDdEI7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUM2Sjs7QUFFN0oiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9iYXJhbmd1aWRlLz8xNmM2Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEFwcFJvdXRlUm91dGVNb2R1bGUgfSBmcm9tIFwibmV4dC9kaXN0L3NlcnZlci9mdXR1cmUvcm91dGUtbW9kdWxlcy9hcHAtcm91dGUvbW9kdWxlLmNvbXBpbGVkXCI7XG5pbXBvcnQgeyBSb3V0ZUtpbmQgfSBmcm9tIFwibmV4dC9kaXN0L3NlcnZlci9mdXR1cmUvcm91dGUta2luZFwiO1xuaW1wb3J0IHsgcGF0Y2hGZXRjaCBhcyBfcGF0Y2hGZXRjaCB9IGZyb20gXCJuZXh0L2Rpc3Qvc2VydmVyL2xpYi9wYXRjaC1mZXRjaFwiO1xuaW1wb3J0ICogYXMgdXNlcmxhbmQgZnJvbSBcIkM6XFxcXHhhbXBwXFxcXGh0ZG9jc1xcXFxuZXh0QmFyYW5HdWlkZVxcXFxzcmNcXFxcYXBwXFxcXGFwaVxcXFxjaGF0Ym90XFxcXG1lc3NhZ2VcXFxccm91dGUudHNcIjtcbi8vIFdlIGluamVjdCB0aGUgbmV4dENvbmZpZ091dHB1dCBoZXJlIHNvIHRoYXQgd2UgY2FuIHVzZSB0aGVtIGluIHRoZSByb3V0ZVxuLy8gbW9kdWxlLlxuY29uc3QgbmV4dENvbmZpZ091dHB1dCA9IFwiXCJcbmNvbnN0IHJvdXRlTW9kdWxlID0gbmV3IEFwcFJvdXRlUm91dGVNb2R1bGUoe1xuICAgIGRlZmluaXRpb246IHtcbiAgICAgICAga2luZDogUm91dGVLaW5kLkFQUF9ST1VURSxcbiAgICAgICAgcGFnZTogXCIvYXBpL2NoYXRib3QvbWVzc2FnZS9yb3V0ZVwiLFxuICAgICAgICBwYXRobmFtZTogXCIvYXBpL2NoYXRib3QvbWVzc2FnZVwiLFxuICAgICAgICBmaWxlbmFtZTogXCJyb3V0ZVwiLFxuICAgICAgICBidW5kbGVQYXRoOiBcImFwcC9hcGkvY2hhdGJvdC9tZXNzYWdlL3JvdXRlXCJcbiAgICB9LFxuICAgIHJlc29sdmVkUGFnZVBhdGg6IFwiQzpcXFxceGFtcHBcXFxcaHRkb2NzXFxcXG5leHRCYXJhbkd1aWRlXFxcXHNyY1xcXFxhcHBcXFxcYXBpXFxcXGNoYXRib3RcXFxcbWVzc2FnZVxcXFxyb3V0ZS50c1wiLFxuICAgIG5leHRDb25maWdPdXRwdXQsXG4gICAgdXNlcmxhbmRcbn0pO1xuLy8gUHVsbCBvdXQgdGhlIGV4cG9ydHMgdGhhdCB3ZSBuZWVkIHRvIGV4cG9zZSBmcm9tIHRoZSBtb2R1bGUuIFRoaXMgc2hvdWxkXG4vLyBiZSBlbGltaW5hdGVkIHdoZW4gd2UndmUgbW92ZWQgdGhlIG90aGVyIHJvdXRlcyB0byB0aGUgbmV3IGZvcm1hdC4gVGhlc2Vcbi8vIGFyZSB1c2VkIHRvIGhvb2sgaW50byB0aGUgcm91dGUuXG5jb25zdCB7IHJlcXVlc3RBc3luY1N0b3JhZ2UsIHN0YXRpY0dlbmVyYXRpb25Bc3luY1N0b3JhZ2UsIHNlcnZlckhvb2tzLCBoZWFkZXJIb29rcywgc3RhdGljR2VuZXJhdGlvbkJhaWxvdXQgfSA9IHJvdXRlTW9kdWxlO1xuY29uc3Qgb3JpZ2luYWxQYXRobmFtZSA9IFwiL2FwaS9jaGF0Ym90L21lc3NhZ2Uvcm91dGVcIjtcbmZ1bmN0aW9uIHBhdGNoRmV0Y2goKSB7XG4gICAgcmV0dXJuIF9wYXRjaEZldGNoKHtcbiAgICAgICAgc2VydmVySG9va3MsXG4gICAgICAgIHN0YXRpY0dlbmVyYXRpb25Bc3luY1N0b3JhZ2VcbiAgICB9KTtcbn1cbmV4cG9ydCB7IHJvdXRlTW9kdWxlLCByZXF1ZXN0QXN5bmNTdG9yYWdlLCBzdGF0aWNHZW5lcmF0aW9uQXN5bmNTdG9yYWdlLCBzZXJ2ZXJIb29rcywgaGVhZGVySG9va3MsIHN0YXRpY0dlbmVyYXRpb25CYWlsb3V0LCBvcmlnaW5hbFBhdGhuYW1lLCBwYXRjaEZldGNoLCAgfTtcblxuLy8jIHNvdXJjZU1hcHBpbmdVUkw9YXBwLXJvdXRlLmpzLm1hcCJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fchatbot%2Fmessage%2Froute&page=%2Fapi%2Fchatbot%2Fmessage%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fchatbot%2Fmessage%2Froute.ts&appDir=C%3A%5Cxampp%5Chtdocs%5CnextBaranGuide%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5Cxampp%5Chtdocs%5CnextBaranGuide&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!\n");
+
+/***/ }),
+
+/***/ "(rsc)/./src/app/api/chatbot/message/route.ts":
+/*!**********************************************!*\
+  !*** ./src/app/api/chatbot/message/route.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   POST: () => (/* binding */ POST)\n/* harmony export */ });\n/* harmony import */ var next_dist_server_web_exports_next_response__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! next/dist/server/web/exports/next-response */ \"(rsc)/./node_modules/next/dist/server/web/exports/next-response.js\");\n/* harmony import */ var _google_generative_ai__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @google/generative-ai */ \"(rsc)/./node_modules/@google/generative-ai/dist/index.mjs\");\n/* harmony import */ var _lib_supabase__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/lib/supabase */ \"(rsc)/./src/lib/supabase.ts\");\n\n\n\n// Initialize Gemini AI\nconst genAI = new _google_generative_ai__WEBPACK_IMPORTED_MODULE_1__.GoogleGenerativeAI(process.env.GEMINI_API_KEY || \"\");\nconst model = genAI.getGenerativeModel({\n    model: \"gemini-2.0-flash\"\n});\n// Function to get context from database\nasync function getDatabaseContext() {\n    try {\n        // Fetch services from Supabase\n        const { data: services, error: servicesError } = await _lib_supabase__WEBPACK_IMPORTED_MODULE_2__.supabase.from(\"services\").select(\"*\");\n        // Fetch FAQs from Supabase\n        const { data: faqs, error: faqsError } = await _lib_supabase__WEBPACK_IMPORTED_MODULE_2__.supabase.from(\"faqs\").select(\"*\");\n        if (servicesError || faqsError) {\n            console.error(\"Error fetching context:\", servicesError || faqsError);\n            return \"\";\n        }\n        let context = \"Here's information about our barangay services and frequently asked questions:\\n\\n\";\n        context += \"SERVICES:\\n\";\n        services?.forEach((service)=>{\n            context += `Service: ${service.title}\\nRequirements: ${service.requirements}\\nFee: ${service.price}\\nDuration: ${service.duration}\\n\\n`;\n        });\n        context += \"FREQUENTLY ASKED QUESTIONS:\\n\";\n        faqs?.forEach((faq)=>{\n            context += `Q: ${faq.question}\\nA: ${faq.answer}\\n\\n`;\n        });\n        return context;\n    } catch (error) {\n        console.error(\"Error getting database context:\", error);\n        return \"\";\n    }\n}\n// Function to get recent conversation history\nasync function getConversationHistory(limit = 5) {\n    try {\n        const { data: messages, error } = await _lib_supabase__WEBPACK_IMPORTED_MODULE_2__.supabase.from(\"messages\").select(\"*\").order(\"created_at\", {\n            ascending: false\n        }).limit(limit);\n        if (error) {\n            console.error(\"Error fetching conversation history:\", error);\n            return [];\n        }\n        return messages?.reverse() || [];\n    } catch (error) {\n        console.error(\"Error getting conversation history:\", error);\n        return [];\n    }\n}\n// Function to clean response text\nfunction cleanResponseText(text) {\n    return text.replace(/\\*/g, \"\");\n}\nasync function POST(request) {\n    try {\n        const { message } = await request.json();\n        if (!message) {\n            return next_dist_server_web_exports_next_response__WEBPACK_IMPORTED_MODULE_0__[\"default\"].json({\n                error: \"Message is required\"\n            }, {\n                status: 400\n            });\n        }\n        const databaseContext = await getDatabaseContext();\n        const conversationHistory = await getConversationHistory();\n        // Build conversation history string\n        let conversationContext = \"\";\n        if (conversationHistory.length > 0) {\n            conversationContext = \"Previous conversation:\\n\";\n            conversationHistory.forEach((msg)=>{\n                conversationContext += `${msg.sender === \"user\" ? \"User\" : \"Assistant\"}: ${msg.content}\\n`;\n            });\n            conversationContext += \"\\n\";\n        }\n        const systemPrompt = `You are BaranGuide, a helpful assistant for barangay-related inquiries in the Philippines. \r\nYou help citizens navigate barangay services, requirements, fees, and procedures.\r\nYou should be polite, informative, and provide specific information about barangay services.\r\nIf you don't know the answer to a question, please say so and suggest they visit the barangay office.\r\nUse Filipino phrases occasionally to sound more friendly and approachable. But answer in English if the question is in English.\r\nKeep your answers concise and directly address the user's question.\r\nYour responses should be helpful for Filipino citizens who are trying to navigate barangay procedures.\r\n\r\nWhen users ask about requirements for a service, provide a clear list of all requirements.\r\nWhen users ask where to get the requirements, provide specific locations or offices where they can obtain each requirement.\r\nFor example, if a requirement is a birth certificate, specify that they can get it from the PSA (Philippine Statistics Authority) or their local civil registry office.\r\nIf a requirement is a barangay clearance, specify that they can get it from their barangay office.\r\n\r\nBelow is information about the specific services and FAQs available in this barangay:\r\n\r\n${databaseContext}\r\n\r\n${conversationContext}\r\n\r\nPlease respond to the following message from a citizen:`;\n        const fullPrompt = `${systemPrompt}\\n\\nUser: ${message}`;\n        try {\n            const result = await model.generateContent(fullPrompt);\n            const response = cleanResponseText(result.response.text());\n            // Save the conversation to Supabase\n            await _lib_supabase__WEBPACK_IMPORTED_MODULE_2__.supabase.from(\"messages\").insert([\n                {\n                    sender: \"user\",\n                    content: message\n                },\n                {\n                    sender: \"bot\",\n                    content: response\n                }\n            ]);\n            return next_dist_server_web_exports_next_response__WEBPACK_IMPORTED_MODULE_0__[\"default\"].json({\n                data: {\n                    response\n                }\n            });\n        } catch (aiError) {\n            console.error(\"Error with Gemini API:\", aiError);\n            const fallbackResponse = \"I'm sorry, I'm having trouble connecting to my knowledge base right now. Please try again in a moment or visit your local Barangay office for immediate assistance.\";\n            // Save the error conversation to Supabase\n            await _lib_supabase__WEBPACK_IMPORTED_MODULE_2__.supabase.from(\"messages\").insert([\n                {\n                    sender: \"user\",\n                    content: message\n                },\n                {\n                    sender: \"bot\",\n                    content: fallbackResponse,\n                    is_error: true\n                }\n            ]);\n            return next_dist_server_web_exports_next_response__WEBPACK_IMPORTED_MODULE_0__[\"default\"].json({\n                data: {\n                    response: fallbackResponse\n                }\n            });\n        }\n    } catch (error) {\n        console.error(\"Error generating chat response:\", error);\n        return next_dist_server_web_exports_next_response__WEBPACK_IMPORTED_MODULE_0__[\"default\"].json({\n            error: \"Internal server error\"\n        }, {\n            status: 500\n        });\n    }\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9zcmMvYXBwL2FwaS9jaGF0Ym90L21lc3NhZ2Uvcm91dGUudHMiLCJtYXBwaW5ncyI6Ijs7Ozs7OztBQUEyQztBQUNnQjtBQUNqQjtBQUUxQyx1QkFBdUI7QUFDdkIsTUFBTUcsUUFBUSxJQUFJRixxRUFBa0JBLENBQUNHLFFBQVFDLEdBQUcsQ0FBQ0MsY0FBYyxJQUFJO0FBQ25FLE1BQU1DLFFBQVFKLE1BQU1LLGtCQUFrQixDQUFDO0lBQUVELE9BQU87QUFBbUI7QUFFbkUsd0NBQXdDO0FBQ3hDLGVBQWVFO0lBQ2IsSUFBSTtRQUNGLCtCQUErQjtRQUMvQixNQUFNLEVBQUVDLE1BQU1DLFFBQVEsRUFBRUMsT0FBT0MsYUFBYSxFQUFFLEdBQUcsTUFBTVgsbURBQVFBLENBQzVEWSxJQUFJLENBQUMsWUFDTEMsTUFBTSxDQUFDO1FBRVYsMkJBQTJCO1FBQzNCLE1BQU0sRUFBRUwsTUFBTU0sSUFBSSxFQUFFSixPQUFPSyxTQUFTLEVBQUUsR0FBRyxNQUFNZixtREFBUUEsQ0FDcERZLElBQUksQ0FBQyxRQUNMQyxNQUFNLENBQUM7UUFFVixJQUFJRixpQkFBaUJJLFdBQVc7WUFDOUJDLFFBQVFOLEtBQUssQ0FBQywyQkFBMkJDLGlCQUFpQkk7WUFDMUQsT0FBTztRQUNUO1FBRUEsSUFBSUUsVUFBVTtRQUVkQSxXQUFXO1FBQ1hSLFVBQVVTLFFBQVFDLENBQUFBO1lBQ2hCRixXQUFXLENBQUMsU0FBUyxFQUFFRSxRQUFRQyxLQUFLLENBQUMsZ0JBQWdCLEVBQUVELFFBQVFFLFlBQVksQ0FBQyxPQUFPLEVBQUVGLFFBQVFHLEtBQUssQ0FBQyxZQUFZLEVBQUVILFFBQVFJLFFBQVEsQ0FBQyxJQUFJLENBQUM7UUFDekk7UUFFQU4sV0FBVztRQUNYSCxNQUFNSSxRQUFRTSxDQUFBQTtZQUNaUCxXQUFXLENBQUMsR0FBRyxFQUFFTyxJQUFJQyxRQUFRLENBQUMsS0FBSyxFQUFFRCxJQUFJRSxNQUFNLENBQUMsSUFBSSxDQUFDO1FBQ3ZEO1FBRUEsT0FBT1Q7SUFDVCxFQUFFLE9BQU9QLE9BQU87UUFDZE0sUUFBUU4sS0FBSyxDQUFDLG1DQUFtQ0E7UUFDakQsT0FBTztJQUNUO0FBQ0Y7QUFFQSw4Q0FBOEM7QUFDOUMsZUFBZWlCLHVCQUF1QkMsUUFBUSxDQUFDO0lBQzdDLElBQUk7UUFDRixNQUFNLEVBQUVwQixNQUFNcUIsUUFBUSxFQUFFbkIsS0FBSyxFQUFFLEdBQUcsTUFBTVYsbURBQVFBLENBQzdDWSxJQUFJLENBQUMsWUFDTEMsTUFBTSxDQUFDLEtBQ1BpQixLQUFLLENBQUMsY0FBYztZQUFFQyxXQUFXO1FBQU0sR0FDdkNILEtBQUssQ0FBQ0E7UUFFVCxJQUFJbEIsT0FBTztZQUNUTSxRQUFRTixLQUFLLENBQUMsd0NBQXdDQTtZQUN0RCxPQUFPLEVBQUU7UUFDWDtRQUVBLE9BQU9tQixVQUFVRyxhQUFhLEVBQUU7SUFDbEMsRUFBRSxPQUFPdEIsT0FBTztRQUNkTSxRQUFRTixLQUFLLENBQUMsdUNBQXVDQTtRQUNyRCxPQUFPLEVBQUU7SUFDWDtBQUNGO0FBRUEsa0NBQWtDO0FBQ2xDLFNBQVN1QixrQkFBa0JDLElBQVk7SUFDckMsT0FBT0EsS0FBS0MsT0FBTyxDQUFDLE9BQU87QUFDN0I7QUFFTyxlQUFlQyxLQUFLQyxPQUFnQjtJQUN6QyxJQUFJO1FBQ0YsTUFBTSxFQUFFQyxPQUFPLEVBQUUsR0FBRyxNQUFNRCxRQUFRRSxJQUFJO1FBRXRDLElBQUksQ0FBQ0QsU0FBUztZQUNaLE9BQU94QyxrRkFBWUEsQ0FBQ3lDLElBQUksQ0FDdEI7Z0JBQUU3QixPQUFPO1lBQXNCLEdBQy9CO2dCQUFFOEIsUUFBUTtZQUFJO1FBRWxCO1FBRUEsTUFBTUMsa0JBQWtCLE1BQU1sQztRQUM5QixNQUFNbUMsc0JBQXNCLE1BQU1mO1FBRWxDLG9DQUFvQztRQUNwQyxJQUFJZ0Isc0JBQXNCO1FBQzFCLElBQUlELG9CQUFvQkUsTUFBTSxHQUFHLEdBQUc7WUFDbENELHNCQUFzQjtZQUN0QkQsb0JBQW9CeEIsT0FBTyxDQUFDMkIsQ0FBQUE7Z0JBQzFCRix1QkFBdUIsQ0FBQyxFQUFFRSxJQUFJQyxNQUFNLEtBQUssU0FBUyxTQUFTLFlBQVksRUFBRSxFQUFFRCxJQUFJRSxPQUFPLENBQUMsRUFBRSxDQUFDO1lBQzVGO1lBQ0FKLHVCQUF1QjtRQUN6QjtRQUVBLE1BQU1LLGVBQWUsQ0FBQzs7Ozs7Ozs7Ozs7Ozs7O0FBZTFCLEVBQUVQLGdCQUFnQjs7QUFFbEIsRUFBRUUsb0JBQW9COzt1REFFaUMsQ0FBQztRQUVwRCxNQUFNTSxhQUFhLENBQUMsRUFBRUQsYUFBYSxVQUFVLEVBQUVWLFFBQVEsQ0FBQztRQUV4RCxJQUFJO1lBQ0YsTUFBTVksU0FBUyxNQUFNN0MsTUFBTThDLGVBQWUsQ0FBQ0Y7WUFDM0MsTUFBTUcsV0FBV25CLGtCQUFrQmlCLE9BQU9FLFFBQVEsQ0FBQ2xCLElBQUk7WUFFdkQsb0NBQW9DO1lBQ3BDLE1BQU1sQyxtREFBUUEsQ0FBQ1ksSUFBSSxDQUFDLFlBQVl5QyxNQUFNLENBQUM7Z0JBQ3JDO29CQUFFUCxRQUFRO29CQUFRQyxTQUFTVDtnQkFBUTtnQkFDbkM7b0JBQUVRLFFBQVE7b0JBQU9DLFNBQVNLO2dCQUFTO2FBQ3BDO1lBRUQsT0FBT3RELGtGQUFZQSxDQUFDeUMsSUFBSSxDQUFDO2dCQUN2Qi9CLE1BQU07b0JBQUU0QztnQkFBUztZQUNuQjtRQUNGLEVBQUUsT0FBT0UsU0FBUztZQUNoQnRDLFFBQVFOLEtBQUssQ0FBQywwQkFBMEI0QztZQUV4QyxNQUFNQyxtQkFBbUI7WUFFekIsMENBQTBDO1lBQzFDLE1BQU12RCxtREFBUUEsQ0FBQ1ksSUFBSSxDQUFDLFlBQVl5QyxNQUFNLENBQUM7Z0JBQ3JDO29CQUFFUCxRQUFRO29CQUFRQyxTQUFTVDtnQkFBUTtnQkFDbkM7b0JBQUVRLFFBQVE7b0JBQU9DLFNBQVNRO29CQUFrQkMsVUFBVTtnQkFBSzthQUM1RDtZQUVELE9BQU8xRCxrRkFBWUEsQ0FBQ3lDLElBQUksQ0FBQztnQkFDdkIvQixNQUFNO29CQUFFNEMsVUFBVUc7Z0JBQWlCO1lBQ3JDO1FBQ0Y7SUFDRixFQUFFLE9BQU83QyxPQUFPO1FBQ2RNLFFBQVFOLEtBQUssQ0FBQyxtQ0FBbUNBO1FBQ2pELE9BQU9aLGtGQUFZQSxDQUFDeUMsSUFBSSxDQUN0QjtZQUFFN0IsT0FBTztRQUF3QixHQUNqQztZQUFFOEIsUUFBUTtRQUFJO0lBRWxCO0FBQ0YiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9iYXJhbmd1aWRlLy4vc3JjL2FwcC9hcGkvY2hhdGJvdC9tZXNzYWdlL3JvdXRlLnRzPzFjMTIiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgTmV4dFJlc3BvbnNlIH0gZnJvbSAnbmV4dC9zZXJ2ZXInO1xyXG5pbXBvcnQgeyBHb29nbGVHZW5lcmF0aXZlQUkgfSBmcm9tICdAZ29vZ2xlL2dlbmVyYXRpdmUtYWknO1xyXG5pbXBvcnQgeyBzdXBhYmFzZSB9IGZyb20gJ0AvbGliL3N1cGFiYXNlJztcclxuXHJcbi8vIEluaXRpYWxpemUgR2VtaW5pIEFJXHJcbmNvbnN0IGdlbkFJID0gbmV3IEdvb2dsZUdlbmVyYXRpdmVBSShwcm9jZXNzLmVudi5HRU1JTklfQVBJX0tFWSB8fCAnJyk7XHJcbmNvbnN0IG1vZGVsID0gZ2VuQUkuZ2V0R2VuZXJhdGl2ZU1vZGVsKHsgbW9kZWw6ICdnZW1pbmktMi4wLWZsYXNoJyB9KTtcclxuXHJcbi8vIEZ1bmN0aW9uIHRvIGdldCBjb250ZXh0IGZyb20gZGF0YWJhc2VcclxuYXN5bmMgZnVuY3Rpb24gZ2V0RGF0YWJhc2VDb250ZXh0KCkge1xyXG4gIHRyeSB7XHJcbiAgICAvLyBGZXRjaCBzZXJ2aWNlcyBmcm9tIFN1cGFiYXNlXHJcbiAgICBjb25zdCB7IGRhdGE6IHNlcnZpY2VzLCBlcnJvcjogc2VydmljZXNFcnJvciB9ID0gYXdhaXQgc3VwYWJhc2VcclxuICAgICAgLmZyb20oJ3NlcnZpY2VzJylcclxuICAgICAgLnNlbGVjdCgnKicpO1xyXG5cclxuICAgIC8vIEZldGNoIEZBUXMgZnJvbSBTdXBhYmFzZVxyXG4gICAgY29uc3QgeyBkYXRhOiBmYXFzLCBlcnJvcjogZmFxc0Vycm9yIH0gPSBhd2FpdCBzdXBhYmFzZVxyXG4gICAgICAuZnJvbSgnZmFxcycpXHJcbiAgICAgIC5zZWxlY3QoJyonKTtcclxuXHJcbiAgICBpZiAoc2VydmljZXNFcnJvciB8fCBmYXFzRXJyb3IpIHtcclxuICAgICAgY29uc29sZS5lcnJvcignRXJyb3IgZmV0Y2hpbmcgY29udGV4dDonLCBzZXJ2aWNlc0Vycm9yIHx8IGZhcXNFcnJvcik7XHJcbiAgICAgIHJldHVybiBcIlwiO1xyXG4gICAgfVxyXG5cclxuICAgIGxldCBjb250ZXh0ID0gXCJIZXJlJ3MgaW5mb3JtYXRpb24gYWJvdXQgb3VyIGJhcmFuZ2F5IHNlcnZpY2VzIGFuZCBmcmVxdWVudGx5IGFza2VkIHF1ZXN0aW9uczpcXG5cXG5cIjtcclxuXHJcbiAgICBjb250ZXh0ICs9IFwiU0VSVklDRVM6XFxuXCI7XHJcbiAgICBzZXJ2aWNlcz8uZm9yRWFjaChzZXJ2aWNlID0+IHtcclxuICAgICAgY29udGV4dCArPSBgU2VydmljZTogJHtzZXJ2aWNlLnRpdGxlfVxcblJlcXVpcmVtZW50czogJHtzZXJ2aWNlLnJlcXVpcmVtZW50c31cXG5GZWU6ICR7c2VydmljZS5wcmljZX1cXG5EdXJhdGlvbjogJHtzZXJ2aWNlLmR1cmF0aW9ufVxcblxcbmA7XHJcbiAgICB9KTtcclxuXHJcbiAgICBjb250ZXh0ICs9IFwiRlJFUVVFTlRMWSBBU0tFRCBRVUVTVElPTlM6XFxuXCI7XHJcbiAgICBmYXFzPy5mb3JFYWNoKGZhcSA9PiB7XHJcbiAgICAgIGNvbnRleHQgKz0gYFE6ICR7ZmFxLnF1ZXN0aW9ufVxcbkE6ICR7ZmFxLmFuc3dlcn1cXG5cXG5gO1xyXG4gICAgfSk7XHJcblxyXG4gICAgcmV0dXJuIGNvbnRleHQ7XHJcbiAgfSBjYXRjaCAoZXJyb3IpIHtcclxuICAgIGNvbnNvbGUuZXJyb3IoJ0Vycm9yIGdldHRpbmcgZGF0YWJhc2UgY29udGV4dDonLCBlcnJvcik7XHJcbiAgICByZXR1cm4gXCJcIjtcclxuICB9XHJcbn1cclxuXHJcbi8vIEZ1bmN0aW9uIHRvIGdldCByZWNlbnQgY29udmVyc2F0aW9uIGhpc3RvcnlcclxuYXN5bmMgZnVuY3Rpb24gZ2V0Q29udmVyc2F0aW9uSGlzdG9yeShsaW1pdCA9IDUpIHtcclxuICB0cnkge1xyXG4gICAgY29uc3QgeyBkYXRhOiBtZXNzYWdlcywgZXJyb3IgfSA9IGF3YWl0IHN1cGFiYXNlXHJcbiAgICAgIC5mcm9tKCdtZXNzYWdlcycpXHJcbiAgICAgIC5zZWxlY3QoJyonKVxyXG4gICAgICAub3JkZXIoJ2NyZWF0ZWRfYXQnLCB7IGFzY2VuZGluZzogZmFsc2UgfSlcclxuICAgICAgLmxpbWl0KGxpbWl0KTtcclxuXHJcbiAgICBpZiAoZXJyb3IpIHtcclxuICAgICAgY29uc29sZS5lcnJvcignRXJyb3IgZmV0Y2hpbmcgY29udmVyc2F0aW9uIGhpc3Rvcnk6JywgZXJyb3IpO1xyXG4gICAgICByZXR1cm4gW107XHJcbiAgICB9XHJcblxyXG4gICAgcmV0dXJuIG1lc3NhZ2VzPy5yZXZlcnNlKCkgfHwgW107XHJcbiAgfSBjYXRjaCAoZXJyb3IpIHtcclxuICAgIGNvbnNvbGUuZXJyb3IoJ0Vycm9yIGdldHRpbmcgY29udmVyc2F0aW9uIGhpc3Rvcnk6JywgZXJyb3IpO1xyXG4gICAgcmV0dXJuIFtdO1xyXG4gIH1cclxufVxyXG5cclxuLy8gRnVuY3Rpb24gdG8gY2xlYW4gcmVzcG9uc2UgdGV4dFxyXG5mdW5jdGlvbiBjbGVhblJlc3BvbnNlVGV4dCh0ZXh0OiBzdHJpbmcpOiBzdHJpbmcge1xyXG4gIHJldHVybiB0ZXh0LnJlcGxhY2UoL1xcKi9nLCAnJyk7XHJcbn1cclxuXHJcbmV4cG9ydCBhc3luYyBmdW5jdGlvbiBQT1NUKHJlcXVlc3Q6IFJlcXVlc3QpIHtcclxuICB0cnkge1xyXG4gICAgY29uc3QgeyBtZXNzYWdlIH0gPSBhd2FpdCByZXF1ZXN0Lmpzb24oKTtcclxuXHJcbiAgICBpZiAoIW1lc3NhZ2UpIHtcclxuICAgICAgcmV0dXJuIE5leHRSZXNwb25zZS5qc29uKFxyXG4gICAgICAgIHsgZXJyb3I6ICdNZXNzYWdlIGlzIHJlcXVpcmVkJyB9LFxyXG4gICAgICAgIHsgc3RhdHVzOiA0MDAgfVxyXG4gICAgICApO1xyXG4gICAgfVxyXG5cclxuICAgIGNvbnN0IGRhdGFiYXNlQ29udGV4dCA9IGF3YWl0IGdldERhdGFiYXNlQ29udGV4dCgpO1xyXG4gICAgY29uc3QgY29udmVyc2F0aW9uSGlzdG9yeSA9IGF3YWl0IGdldENvbnZlcnNhdGlvbkhpc3RvcnkoKTtcclxuXHJcbiAgICAvLyBCdWlsZCBjb252ZXJzYXRpb24gaGlzdG9yeSBzdHJpbmdcclxuICAgIGxldCBjb252ZXJzYXRpb25Db250ZXh0ID0gJyc7XHJcbiAgICBpZiAoY29udmVyc2F0aW9uSGlzdG9yeS5sZW5ndGggPiAwKSB7XHJcbiAgICAgIGNvbnZlcnNhdGlvbkNvbnRleHQgPSBcIlByZXZpb3VzIGNvbnZlcnNhdGlvbjpcXG5cIjtcclxuICAgICAgY29udmVyc2F0aW9uSGlzdG9yeS5mb3JFYWNoKG1zZyA9PiB7XHJcbiAgICAgICAgY29udmVyc2F0aW9uQ29udGV4dCArPSBgJHttc2cuc2VuZGVyID09PSAndXNlcicgPyAnVXNlcicgOiAnQXNzaXN0YW50J306ICR7bXNnLmNvbnRlbnR9XFxuYDtcclxuICAgICAgfSk7XHJcbiAgICAgIGNvbnZlcnNhdGlvbkNvbnRleHQgKz0gXCJcXG5cIjtcclxuICAgIH1cclxuXHJcbiAgICBjb25zdCBzeXN0ZW1Qcm9tcHQgPSBgWW91IGFyZSBCYXJhbkd1aWRlLCBhIGhlbHBmdWwgYXNzaXN0YW50IGZvciBiYXJhbmdheS1yZWxhdGVkIGlucXVpcmllcyBpbiB0aGUgUGhpbGlwcGluZXMuIFxyXG5Zb3UgaGVscCBjaXRpemVucyBuYXZpZ2F0ZSBiYXJhbmdheSBzZXJ2aWNlcywgcmVxdWlyZW1lbnRzLCBmZWVzLCBhbmQgcHJvY2VkdXJlcy5cclxuWW91IHNob3VsZCBiZSBwb2xpdGUsIGluZm9ybWF0aXZlLCBhbmQgcHJvdmlkZSBzcGVjaWZpYyBpbmZvcm1hdGlvbiBhYm91dCBiYXJhbmdheSBzZXJ2aWNlcy5cclxuSWYgeW91IGRvbid0IGtub3cgdGhlIGFuc3dlciB0byBhIHF1ZXN0aW9uLCBwbGVhc2Ugc2F5IHNvIGFuZCBzdWdnZXN0IHRoZXkgdmlzaXQgdGhlIGJhcmFuZ2F5IG9mZmljZS5cclxuVXNlIEZpbGlwaW5vIHBocmFzZXMgb2NjYXNpb25hbGx5IHRvIHNvdW5kIG1vcmUgZnJpZW5kbHkgYW5kIGFwcHJvYWNoYWJsZS4gQnV0IGFuc3dlciBpbiBFbmdsaXNoIGlmIHRoZSBxdWVzdGlvbiBpcyBpbiBFbmdsaXNoLlxyXG5LZWVwIHlvdXIgYW5zd2VycyBjb25jaXNlIGFuZCBkaXJlY3RseSBhZGRyZXNzIHRoZSB1c2VyJ3MgcXVlc3Rpb24uXHJcbllvdXIgcmVzcG9uc2VzIHNob3VsZCBiZSBoZWxwZnVsIGZvciBGaWxpcGlubyBjaXRpemVucyB3aG8gYXJlIHRyeWluZyB0byBuYXZpZ2F0ZSBiYXJhbmdheSBwcm9jZWR1cmVzLlxyXG5cclxuV2hlbiB1c2VycyBhc2sgYWJvdXQgcmVxdWlyZW1lbnRzIGZvciBhIHNlcnZpY2UsIHByb3ZpZGUgYSBjbGVhciBsaXN0IG9mIGFsbCByZXF1aXJlbWVudHMuXHJcbldoZW4gdXNlcnMgYXNrIHdoZXJlIHRvIGdldCB0aGUgcmVxdWlyZW1lbnRzLCBwcm92aWRlIHNwZWNpZmljIGxvY2F0aW9ucyBvciBvZmZpY2VzIHdoZXJlIHRoZXkgY2FuIG9idGFpbiBlYWNoIHJlcXVpcmVtZW50LlxyXG5Gb3IgZXhhbXBsZSwgaWYgYSByZXF1aXJlbWVudCBpcyBhIGJpcnRoIGNlcnRpZmljYXRlLCBzcGVjaWZ5IHRoYXQgdGhleSBjYW4gZ2V0IGl0IGZyb20gdGhlIFBTQSAoUGhpbGlwcGluZSBTdGF0aXN0aWNzIEF1dGhvcml0eSkgb3IgdGhlaXIgbG9jYWwgY2l2aWwgcmVnaXN0cnkgb2ZmaWNlLlxyXG5JZiBhIHJlcXVpcmVtZW50IGlzIGEgYmFyYW5nYXkgY2xlYXJhbmNlLCBzcGVjaWZ5IHRoYXQgdGhleSBjYW4gZ2V0IGl0IGZyb20gdGhlaXIgYmFyYW5nYXkgb2ZmaWNlLlxyXG5cclxuQmVsb3cgaXMgaW5mb3JtYXRpb24gYWJvdXQgdGhlIHNwZWNpZmljIHNlcnZpY2VzIGFuZCBGQVFzIGF2YWlsYWJsZSBpbiB0aGlzIGJhcmFuZ2F5OlxyXG5cclxuJHtkYXRhYmFzZUNvbnRleHR9XHJcblxyXG4ke2NvbnZlcnNhdGlvbkNvbnRleHR9XHJcblxyXG5QbGVhc2UgcmVzcG9uZCB0byB0aGUgZm9sbG93aW5nIG1lc3NhZ2UgZnJvbSBhIGNpdGl6ZW46YDtcclxuXHJcbiAgICBjb25zdCBmdWxsUHJvbXB0ID0gYCR7c3lzdGVtUHJvbXB0fVxcblxcblVzZXI6ICR7bWVzc2FnZX1gO1xyXG5cclxuICAgIHRyeSB7XHJcbiAgICAgIGNvbnN0IHJlc3VsdCA9IGF3YWl0IG1vZGVsLmdlbmVyYXRlQ29udGVudChmdWxsUHJvbXB0KTtcclxuICAgICAgY29uc3QgcmVzcG9uc2UgPSBjbGVhblJlc3BvbnNlVGV4dChyZXN1bHQucmVzcG9uc2UudGV4dCgpKTtcclxuXHJcbiAgICAgIC8vIFNhdmUgdGhlIGNvbnZlcnNhdGlvbiB0byBTdXBhYmFzZVxyXG4gICAgICBhd2FpdCBzdXBhYmFzZS5mcm9tKCdtZXNzYWdlcycpLmluc2VydChbXHJcbiAgICAgICAgeyBzZW5kZXI6ICd1c2VyJywgY29udGVudDogbWVzc2FnZSB9LFxyXG4gICAgICAgIHsgc2VuZGVyOiAnYm90JywgY29udGVudDogcmVzcG9uc2UgfVxyXG4gICAgICBdKTtcclxuXHJcbiAgICAgIHJldHVybiBOZXh0UmVzcG9uc2UuanNvbih7XHJcbiAgICAgICAgZGF0YTogeyByZXNwb25zZSB9XHJcbiAgICAgIH0pO1xyXG4gICAgfSBjYXRjaCAoYWlFcnJvcikge1xyXG4gICAgICBjb25zb2xlLmVycm9yKCdFcnJvciB3aXRoIEdlbWluaSBBUEk6JywgYWlFcnJvcik7XHJcblxyXG4gICAgICBjb25zdCBmYWxsYmFja1Jlc3BvbnNlID0gXCJJJ20gc29ycnksIEknbSBoYXZpbmcgdHJvdWJsZSBjb25uZWN0aW5nIHRvIG15IGtub3dsZWRnZSBiYXNlIHJpZ2h0IG5vdy4gUGxlYXNlIHRyeSBhZ2FpbiBpbiBhIG1vbWVudCBvciB2aXNpdCB5b3VyIGxvY2FsIEJhcmFuZ2F5IG9mZmljZSBmb3IgaW1tZWRpYXRlIGFzc2lzdGFuY2UuXCI7XHJcblxyXG4gICAgICAvLyBTYXZlIHRoZSBlcnJvciBjb252ZXJzYXRpb24gdG8gU3VwYWJhc2VcclxuICAgICAgYXdhaXQgc3VwYWJhc2UuZnJvbSgnbWVzc2FnZXMnKS5pbnNlcnQoW1xyXG4gICAgICAgIHsgc2VuZGVyOiAndXNlcicsIGNvbnRlbnQ6IG1lc3NhZ2UgfSxcclxuICAgICAgICB7IHNlbmRlcjogJ2JvdCcsIGNvbnRlbnQ6IGZhbGxiYWNrUmVzcG9uc2UsIGlzX2Vycm9yOiB0cnVlIH1cclxuICAgICAgXSk7XHJcblxyXG4gICAgICByZXR1cm4gTmV4dFJlc3BvbnNlLmpzb24oe1xyXG4gICAgICAgIGRhdGE6IHsgcmVzcG9uc2U6IGZhbGxiYWNrUmVzcG9uc2UgfVxyXG4gICAgICB9KTtcclxuICAgIH1cclxuICB9IGNhdGNoIChlcnJvcikge1xyXG4gICAgY29uc29sZS5lcnJvcignRXJyb3IgZ2VuZXJhdGluZyBjaGF0IHJlc3BvbnNlOicsIGVycm9yKTtcclxuICAgIHJldHVybiBOZXh0UmVzcG9uc2UuanNvbihcclxuICAgICAgeyBlcnJvcjogJ0ludGVybmFsIHNlcnZlciBlcnJvcicgfSxcclxuICAgICAgeyBzdGF0dXM6IDUwMCB9XHJcbiAgICApO1xyXG4gIH1cclxufSAiXSwibmFtZXMiOlsiTmV4dFJlc3BvbnNlIiwiR29vZ2xlR2VuZXJhdGl2ZUFJIiwic3VwYWJhc2UiLCJnZW5BSSIsInByb2Nlc3MiLCJlbnYiLCJHRU1JTklfQVBJX0tFWSIsIm1vZGVsIiwiZ2V0R2VuZXJhdGl2ZU1vZGVsIiwiZ2V0RGF0YWJhc2VDb250ZXh0IiwiZGF0YSIsInNlcnZpY2VzIiwiZXJyb3IiLCJzZXJ2aWNlc0Vycm9yIiwiZnJvbSIsInNlbGVjdCIsImZhcXMiLCJmYXFzRXJyb3IiLCJjb25zb2xlIiwiY29udGV4dCIsImZvckVhY2giLCJzZXJ2aWNlIiwidGl0bGUiLCJyZXF1aXJlbWVudHMiLCJwcmljZSIsImR1cmF0aW9uIiwiZmFxIiwicXVlc3Rpb24iLCJhbnN3ZXIiLCJnZXRDb252ZXJzYXRpb25IaXN0b3J5IiwibGltaXQiLCJtZXNzYWdlcyIsIm9yZGVyIiwiYXNjZW5kaW5nIiwicmV2ZXJzZSIsImNsZWFuUmVzcG9uc2VUZXh0IiwidGV4dCIsInJlcGxhY2UiLCJQT1NUIiwicmVxdWVzdCIsIm1lc3NhZ2UiLCJqc29uIiwic3RhdHVzIiwiZGF0YWJhc2VDb250ZXh0IiwiY29udmVyc2F0aW9uSGlzdG9yeSIsImNvbnZlcnNhdGlvbkNvbnRleHQiLCJsZW5ndGgiLCJtc2ciLCJzZW5kZXIiLCJjb250ZW50Iiwic3lzdGVtUHJvbXB0IiwiZnVsbFByb21wdCIsInJlc3VsdCIsImdlbmVyYXRlQ29udGVudCIsInJlc3BvbnNlIiwiaW5zZXJ0IiwiYWlFcnJvciIsImZhbGxiYWNrUmVzcG9uc2UiLCJpc19lcnJvciJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(rsc)/./src/app/api/chatbot/message/route.ts\n");
+
+/***/ }),
+
+/***/ "(rsc)/./src/lib/supabase.ts":
+/*!*****************************!*\
+  !*** ./src/lib/supabase.ts ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   supabase: () => (/* binding */ supabase)\n/* harmony export */ });\n/* harmony import */ var _supabase_supabase_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @supabase/supabase-js */ \"(rsc)/./node_modules/@supabase/supabase-js/dist/module/index.js\");\n\nconst supabaseUrl = \"https://eonpmgddebdrepweoznd.supabase.co\";\nconst supabaseKey = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvbnBtZ2RkZWJkcmVwd2Vvem5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2NzAwMDcsImV4cCI6MjA2MzI0NjAwN30.Q6dU6LOsWDcG89sz06GtseJ9k0zc_qzy2Prt1opSzT4\";\nconst supabase = (0,_supabase_supabase_js__WEBPACK_IMPORTED_MODULE_0__.createClient)(supabaseUrl, supabaseKey);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9zcmMvbGliL3N1cGFiYXNlLnRzIiwibWFwcGluZ3MiOiI7Ozs7O0FBQW9EO0FBRXBELE1BQU1DLGNBQWNDLDBDQUFvQztBQUN4RCxNQUFNRyxjQUFjSCxrTkFBeUM7QUFFdEQsTUFBTUssV0FBV1AsbUVBQVlBLENBQUNDLGFBQWFJLGFBQVkiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9iYXJhbmd1aWRlLy4vc3JjL2xpYi9zdXBhYmFzZS50cz8wNmUxIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IGNyZWF0ZUNsaWVudCB9IGZyb20gJ0BzdXBhYmFzZS9zdXBhYmFzZS1qcydcclxuXHJcbmNvbnN0IHN1cGFiYXNlVXJsID0gcHJvY2Vzcy5lbnYuTkVYVF9QVUJMSUNfU1VQQUJBU0VfVVJMIVxyXG5jb25zdCBzdXBhYmFzZUtleSA9IHByb2Nlc3MuZW52Lk5FWFRfUFVCTElDX1NVUEFCQVNFX0FOT05fS0VZIVxyXG5cclxuZXhwb3J0IGNvbnN0IHN1cGFiYXNlID0gY3JlYXRlQ2xpZW50KHN1cGFiYXNlVXJsLCBzdXBhYmFzZUtleSkgIl0sIm5hbWVzIjpbImNyZWF0ZUNsaWVudCIsInN1cGFiYXNlVXJsIiwicHJvY2VzcyIsImVudiIsIk5FWFRfUFVCTElDX1NVUEFCQVNFX1VSTCIsInN1cGFiYXNlS2V5IiwiTkVYVF9QVUJMSUNfU1VQQUJBU0VfQU5PTl9LRVkiLCJzdXBhYmFzZSJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(rsc)/./src/lib/supabase.ts\n");
+
+/***/ })
+
+};
+;
+
+// load runtime
+var __webpack_require__ = require("../../../../webpack-runtime.js");
+__webpack_require__.C(exports);
+var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next","vendor-chunks/@supabase","vendor-chunks/@google"], () => (__webpack_exec__("(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fapi%2Fchatbot%2Fmessage%2Froute&page=%2Fapi%2Fchatbot%2Fmessage%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Fchatbot%2Fmessage%2Froute.ts&appDir=C%3A%5Cxampp%5Chtdocs%5CnextBaranGuide%5Csrc%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5Cxampp%5Chtdocs%5CnextBaranGuide&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!")));
+module.exports = __webpack_exports__;
+
+})();
