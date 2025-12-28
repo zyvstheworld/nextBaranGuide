@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 
 const navLinks = [
+  { name: "Dashboard", href: "/admin/dashboard", icon: "📊" },
   { name: "Services", href: "/admin/services", icon: "📄" },
   { name: "FAQs", href: "/admin/faqs", icon: "❓" },
 ];
@@ -88,4 +89,4 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       </main>
     </div>
   );
-} 
+}

@@ -1,8 +1,15 @@
-"use client"
+"use client";
 
-import { Suspense } from "react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import mammoth from "mammoth";
+
+// Supabase client
+const supabaseClient = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 interface FAQ {
   id: string;
@@ -13,16 +20,15 @@ interface FAQ {
 function LoadingState() {
   return (
     <div className="flex items-center justify-center min-h-[200px]">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5f3dc4]"></div>
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5f3dc4]" />
     </div>
   );
 }
 
 function ErrorState({ message }: { message: string }) {
   return (
-    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">
-      <strong className="font-bold">Error: </strong>
-      <span className="block sm:inline">{message}</span>
+    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+      <strong>Error: </strong>{message}
     </div>
   );
 }
@@ -32,13 +38,14 @@ export default function FAQsPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editFAQ, setEditFAQ] = useState<FAQ | null>(null);
-  const [form, setForm] = useState({
-    question: "",
-    answer: ""
-  });
+  const [form, setForm] = useState({ question: "", answer: "" });
   const [error, setError] = useState("");
 
-  // Fetch FAQs from Supabase
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadMessage, setUploadMessage] = useState("");
+
+  // ---------------- FETCH FAQs ----------------
   const fetchFaqs = async () => {
     try {
       setLoading(true);
@@ -46,16 +53,10 @@ export default function FAQsPage() {
         .from("faqs")
         .select("id, question, answer")
         .order("created_at", { ascending: false });
-      
-      if (error) {
-        console.error("Supabase error:", error);
-        throw error;
-      }
-      if (data) {
-        setFaqs(data);
-      }
-    } catch (err) {
-      console.error("Error fetching FAQs:", err);
+
+      if (error) throw error;
+      setFaqs(data || []);
+    } catch {
       setError("Failed to fetch FAQs");
     } finally {
       setLoading(false);
@@ -66,223 +67,199 @@ export default function FAQsPage() {
     fetchFaqs();
   }, []);
 
-  // Handle Add/Edit
+  // ---------------- ADD / EDIT ----------------
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    
+
     if (!form.question.trim() || !form.answer.trim()) {
       setError("Question and answer are required.");
       return;
     }
 
     try {
-      const faqData = {
-        question: form.question,
-        answer: form.answer
-      };
-
       if (editFAQ) {
-        // Edit
-        const { data, error } = await supabase
+        await supabase
           .from("faqs")
-          .update(faqData)
-          .eq("id", editFAQ.id)
-          .select();
-        
-        if (error) {
-          console.error("Supabase update error:", error);
-          throw error;
-        }
-        setShowModal(false);
-        setEditFAQ(null);
-        setForm({
-          question: "",
-          answer: ""
-        });
-        await fetchFaqs();
+          .update(form)
+          .eq("id", editFAQ.id);
       } else {
-        // Add
-        const { data, error } = await supabase
-          .from("faqs")
-          .insert([faqData])
-          .select();
-        
-        if (error) {
-          console.error("Supabase insert error:", error);
-          throw error;
-        }
-        setShowModal(false);
-        setForm({
-          question: "",
-          answer: ""
-        });
-        await fetchFaqs();
+        await supabase.from("faqs").insert([form]);
       }
-    } catch (err) {
-      console.error("Error saving FAQ:", err);
-      setError(editFAQ ? "Failed to update FAQ." : "Failed to add FAQ.");
+
+      setShowModal(false);
+      setEditFAQ(null);
+      setForm({ question: "", answer: "" });
+      fetchFaqs();
+    } catch {
+      setError("Failed to save FAQ.");
     }
   };
 
-  // Handle Delete
+  // ---------------- DELETE ----------------
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this FAQ?")) return;
-    
-    try {
-      const { error } = await supabase
-        .from("faqs")
-        .delete()
-        .eq("id", id);
-      
-      if (error) throw error;
-      await fetchFaqs();
-    } catch (err) {
-      console.error("Error deleting FAQ:", err);
-      setError("Failed to delete FAQ.");
-    }
+    if (!confirm("Delete this FAQ?")) return;
+    await supabase.from("faqs").delete().eq("id", id);
+    fetchFaqs();
   };
 
-  // Open modal for add/edit
   const openModal = (faq?: FAQ) => {
     if (faq) {
       setEditFAQ(faq);
-      setForm({
-        question: faq.question,
-        answer: faq.answer
-      });
+      setForm({ question: faq.question, answer: faq.answer });
     } else {
       setEditFAQ(null);
-      setForm({
-        question: "",
-        answer: ""
-      });
+      setForm({ question: "", answer: "" });
     }
     setShowModal(true);
   };
 
+  // ---------------- FILE UPLOAD ----------------
+  const handleUpload = async () => {
+    if (!file) {
+      setUploadMessage("Please select a DOCX file.");
+      return;
+    }
+
+    if (file.type !== "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+      setUploadMessage("Invalid DOCX file.");
+      return;
+    }
+
+    setUploading(true);
+    setUploadMessage("");
+
+    try {
+      // Extract DOCX text
+      const buffer = await file.arrayBuffer();
+      const { value } = await mammoth.extractRawText({ arrayBuffer: buffer });
+
+      if (!value.trim()) throw new Error("DOCX contains no text.");
+
+      const text = value.slice(0, 5000);
+
+      // Call NEW FAQ upload route
+      const res = await fetch("/api/gemini-faq-upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!res.ok) throw new Error("AI processing failed.");
+
+      const { response } = await res.json();
+      if (!response) throw new Error("No AI response.");
+
+      // Parse FAQs
+      const blocks = response.split(/\n\s*\n/);
+      const newFaqs = blocks
+        .map((block: string) => {
+          const q = block.match(/Q:\s*(.+)/i);
+          const a = block.match(/A:\s*(.+)/i);
+          if (!q || !a) return null;
+          return { question: q[1].trim(), answer: a[1].trim() };
+        })
+        .filter(Boolean) as { question: string; answer: string }[];
+
+      if (!newFaqs.length) throw new Error("No FAQs generated.");
+
+      await supabaseClient.from("faqs").insert(newFaqs);
+
+      setUploadMessage(`Uploaded ${newFaqs.length} FAQs successfully.`);
+      setFile(null);
+      fetchFaqs();
+    } catch (err: any) {
+      setUploadMessage("Error: " + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // ---------------- UI ----------------
   return (
     <Suspense fallback={<LoadingState />}>
-      <div className="relative min-h-screen p-6">
-        {/* Blurred Olongapo Seal Background */}
-        <div className="absolute inset-0 z-0 flex items-center justify-center">
-          <img
-            src="/olongapo-seal.png"
-            alt="Olongapo City Seal"
-            className="blur-xl opacity-60 w-full h-full object-cover"
-            style={{ position: 'absolute', inset: 0 }}
-            draggable={false}
-          />
-        </div>
-        <div className="relative z-10">
-          <h1 className="text-2xl font-bold mb-6">FAQs</h1>
-          {error && <ErrorState message={error} />}
-          <div className="bg-white rounded-lg shadow p-6">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-[#5f3dc4] text-white">
-                  <th className="py-3 px-4 rounded-tl-lg">Question</th>
-                  <th className="py-3 px-4">Answer</th>
-                  <th className="py-3 px-4 rounded-tr-lg">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan={3} className="text-center py-8">
-                      <LoadingState />
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-6">FAQs</h1>
+        {error && <ErrorState message={error} />}
+
+        {/* TABLE */}
+        <div className="bg-white rounded shadow p-6 mb-6">
+          <table className="w-full">
+            <thead className="bg-[#5f3dc4] text-white">
+              <tr>
+                <th className="p-3">Question</th>
+                <th className="p-3">Answer</th>
+                <th className="p-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan={3}><LoadingState /></td></tr>
+              ) : faqs.length === 0 ? (
+                <tr><td colSpan={3} className="p-6 text-center">No FAQs</td></tr>
+              ) : (
+                faqs.map(faq => (
+                  <tr key={faq.id} className="border-b">
+                    <td className="p-3">{faq.question}</td>
+                    <td className="p-3">{faq.answer}</td>
+                    <td className="p-3">
+                      <button onClick={() => openModal(faq)} className="mr-4 text-blue-600">Edit</button>
+                      <button onClick={() => handleDelete(faq.id)} className="text-red-600">Delete</button>
                     </td>
                   </tr>
-                ) : faqs.length === 0 ? (
-                  <tr>
-                    <td colSpan={3} className="text-center py-8">No FAQs found.</td>
-                  </tr>
-                ) : (
-                  faqs.map((faq) => (
-                    <tr key={faq.id} className="border-b last:border-b-0">
-                      <td className="py-3 px-4">{faq.question}</td>
-                      <td className="py-3 px-4">{faq.answer}</td>
-                      <td className="py-3 px-4">
-                        <button
-                          className="text-[#5f3dc4] font-semibold mr-4 hover:underline"
-                          onClick={() => openModal(faq)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="text-red-600 font-semibold hover:underline"
-                          onClick={() => handleDelete(faq.id)}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-            <button
-              className="mt-6 px-6 py-2 bg-[#283593] text-white rounded hover:bg-[#1a237e] font-semibold"
-              onClick={() => openModal()}
-            >
-              Add FAQ
-            </button>
-          </div>
+                ))
+              )}
+            </tbody>
+          </table>
 
-          {/* Modal */}
-          {showModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-              <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-2xl relative">
-                <button
-                  className="absolute top-3 right-3 text-2xl text-gray-500 hover:text-gray-700"
-                  onClick={() => setShowModal(false)}
-                >
-                  &times;
-                </button>
-                <h2 className="text-xl font-bold mb-4">{editFAQ ? "Edit FAQ" : "Add New FAQ"}</h2>
-                <form onSubmit={handleSave} className="space-y-4">
-                  <div>
-                    <label className="block font-semibold mb-1">Question</label>
-                    <input
-                      type="text"
-                      className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#5f3dc4]"
-                      value={form.question}
-                      onChange={(e) => setForm({ ...form, question: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-semibold mb-1">Answer</label>
-                    <textarea
-                      className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#5f3dc4]"
-                      value={form.answer}
-                      onChange={(e) => setForm({ ...form, answer: e.target.value })}
-                      required
-                      rows={3}
-                    />
-                  </div>
-                  {error && <div className="text-red-500 text-sm">{error}</div>}
-                  <div className="flex justify-end gap-4 mt-4">
-                    <button
-                      type="button"
-                      className="px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-100"
-                      onClick={() => setShowModal(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="px-4 py-2 bg-[#5f3dc4] text-white rounded font-semibold hover:bg-[#4b2fa6]"
-                    >
-                      {editFAQ ? "Save Changes" : "Save FAQ"}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
+          <button onClick={() => openModal()} className="mt-4 bg-indigo-700 text-white px-4 py-2 rounded">
+            Add FAQ
+          </button>
         </div>
+
+        {/* UPLOAD */}
+        <div className="bg-white p-4 rounded shadow">
+          <h3 className="font-semibold mb-2">Upload DOCX</h3>
+          <input type="file" accept=".docx" onChange={e => setFile(e.target.files?.[0] || null)} />
+          <button
+            onClick={handleUpload}
+            disabled={uploading}
+            className="ml-3 bg-blue-600 text-white px-3 py-1 rounded"
+          >
+            {uploading ? "Processing..." : "Upload"}
+          </button>
+          {uploadMessage && <p className="mt-2">{uploadMessage}</p>}
+        </div>
+
+        {/* MODAL */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+            <form onSubmit={handleSave} className="bg-white p-6 rounded w-full max-w-lg">
+              <h2 className="text-xl font-bold mb-4">
+                {editFAQ ? "Edit FAQ" : "Add FAQ"}
+              </h2>
+              <input
+                className="w-full border p-2 mb-3"
+                placeholder="Question"
+                value={form.question}
+                onChange={e => setForm({ ...form, question: e.target.value })}
+              />
+              <textarea
+                className="w-full border p-2 mb-3"
+                placeholder="Answer"
+                value={form.answer}
+                onChange={e => setForm({ ...form, answer: e.target.value })}
+              />
+              <div className="flex justify-end gap-3">
+                <button type="button" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded">
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </Suspense>
   );
-} 
+}
