@@ -1,492 +1,238 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
-type Message = {
-  sender: 'user' | 'bot';
-  content: string;
+interface Message {
+  id: string;
+  text: string;
+  sender: "user" | "bot";
   timestamp: Date;
-  isError?: boolean;
-};
+}
 
 export default function ChatbotPage() {
+  // state for messages array
   const [messages, setMessages] = useState<Message[]>([]);
-  const [userInput, setUserInput] = useState('');
+  // state for current input value
+  const [input, setInput] = useState("");
+  // state for loading indicator
   const [loading, setLoading] = useState(false);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  // ref for auto-scrolling to bottom
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  // ref for input field focus
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => {
-    // Add initial greeting message
-    setMessages([
-      {
-        sender: 'bot',
-        content: 'Hello! Welcome to BaranGuide. How can I help you today?',
-        timestamp: new Date()
-      }
-    ]);
-  }, []);
-
-  useEffect(() => {
-    const setVh = () => {
-      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-    };
-    setVh();
-    window.addEventListener('resize', setVh);
-    return () => window.removeEventListener('resize', setVh);
-  }, []);
-
-  // Function to scroll chat to bottom when new messages arrive
-  const scrollToBottom = () => {
-    setTimeout(() => {
-      if (chatContainerRef.current) {
-        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-      }
-    }, 100);
+  // get time-based greeting
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 18) return "Good Afternoon";
+    return "Good Evening";
   };
 
+  // auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    if (messages.length) {
-      scrollToBottom();
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Send message to API and get response
-  const sendMessage = async () => {
-    if (!userInput.trim()) return;
+  // focus input on mount
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
-    // Add user message to the chat
-    setMessages(prev => [
-      ...prev,
-      {
-        sender: 'user',
-        content: userInput,
-        timestamp: new Date()
-      }
-    ]);
+  // auto-resize textarea
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = "48px";
+      inputRef.current.style.height = `${Math.min(inputRef.current.scrollHeight, 128)}px`;
+    }
+  }, [input]);
 
-    // Clear input and show loading state
-    const query = userInput;
-    setUserInput('');
+  // handle sending a message
+  const handleSend = async () => {
+    if (!input.trim() || loading) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      text: input.trim(),
+      sender: "user",
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
     setLoading(true);
 
     try {
-      // Call the API
-      const response = await fetch(`/api/chatbot/message`, {
-        method: 'POST',
+      const response = await fetch("/api/chatbot/message", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: query })
+        body: JSON.stringify({ message: userMessage.text }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Error getting response from server');
+      if (data.error) {
+        throw new Error(data.error);
       }
 
-      // Add bot response
-      setMessages(prev => [
-        ...prev,
-        {
-          sender: 'bot',
-          content: data.data.response,
-          timestamp: new Date()
-        }
-      ]);
-    } catch (error) {
-      console.error('Error:', error);
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: data.data?.response || "I'm sorry, I couldn't process that request. Please try again.",
+        sender: "bot",
+        timestamp: new Date(),
+      };
 
-      // Add error message
-      setMessages(prev => [
-        ...prev,
-        {
-          sender: 'bot',
-          content: 'Sorry, I encountered an error while processing your request. Please try again later.',
-          timestamp: new Date(),
-          isError: true
-        }
-      ]);
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "I'm sorry, I'm having trouble connecting right now. Please try again in a moment or visit your local Barangay office for immediate assistance.",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setLoading(false);
+      inputRef.current?.focus();
     }
   };
 
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    sendMessage();
-  };
-
-  // Format the message content with line breaks for display
-  const formatMessage = (content: string) => {
-    return content.replace(/\n/g, '<br>');
-  };
-
-  // Focus input after loading is complete
-  useEffect(() => {
-    if (!loading && inputRef.current) {
-      setTimeout(() => inputRef.current?.focus(), 0);
+  // handle enter key press
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
     }
-  }, [loading]);
+  };
 
   return (
-    <div className="page-wrapper">
-      <aside className="desktop-sidebar" aria-label="Barangay information sidebar">
-        <div className="sidebar-card">
-          <div className="sidebar-title-row">
-            <Image src="/gapo-seal.png" alt="Gapo Seal" width={34} height={34} className="sidebar-mini" />
-            <h2 className="sidebar-title"><strong>Sangguniang Barangay</strong></h2>
-            <Image src="/olongapo-seal.png" alt="Olongapo Seal" width={34} height={34} className="sidebar-mini" />
-          </div>
-          <ul className="officials-list">
-            <li><strong>Hon. Rolando A. Alba Jr.</strong><br/>Punong Barangay</li>
-            <li><strong>Hon. Jose B. Galang Jr.</strong><br/>Barangay Kagawad</li>
-            <li><strong>Hon. Gerardo Q. Andrade</strong><br/>Barangay Kagawad</li>
-            <li><strong>Hon. Roderick T. Gaton</strong><br/>Barangay Kagawad</li>
-            <li><strong>Hon. Glenda C. Flores</strong><br/>Barangay Kagawad</li>
-            <li><strong>Hon. Ferdinand R. Dicen</strong><br/>Barangay Kagawad</li>
-            <li><strong>Hon. Joey A. Maglalang</strong><br/>Barangay Kagawad</li>
-            <li><strong>Hon. Jerome L. Duos</strong><br/>Barangay Kagawad</li>
-            <li><strong>Hon. Zenaida L. Miranda</strong><br/>IPMR</li>
-            <li><strong>Hon. Angel Victoria M. Bibanco</strong><br/>SK Chairperson</li>
-            <li><strong>Mr. Edmer T. Lucido</strong><br/>Barangay Secretary</li>
-            <li><strong>Ms. Rosalinda P. Eledia</strong><br/>Barangay Treasurer</li>
-          </ul>
-          <div className="year-badge">2024</div>
-        </div>
-      </aside>
-
-      <div className="chat-container">
-        <div className="city-seal-background"></div>
-        <header>
-          <div className="logo">
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* header */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/landing" className="flex items-center gap-3">
               <Image
                 src="/baranguide-log.png"
-            alt="Olongapo City Seal"
-            width={150}
-            height={50}
-            className="mini-seal"
-          />
-           <span className="chatbot-title">(Barangay Old Cabalan)</span>
+                alt="BaranGuide Logo"
+                width={150}
+                height={50}
+                className="h-10 w-auto"
+              />
+            </Link>
+            <nav className="hidden md:flex items-center gap-4 lg:gap-6">
+              <Link href="/landing" className="px-3 py-2 text-gray-700 text-sm tracking-tight font-medium hover:text-gray-900 transition-colors">
+                Home
+              </Link>
+              <Link href="/landing#services" className="px-3 py-2 text-gray-700 text-sm tracking-tight font-medium hover:text-gray-900 transition-colors">
+                Services
+              </Link>
+              <Link href="/landing#faqs" className="px-3 py-2 text-gray-700 text-sm tracking-tight font-medium hover:text-gray-900 transition-colors">
+                FAQs
+              </Link>
+              <Link href="/landing#contacts" className="px-3 py-2 text-gray-700 text-sm tracking-tight font-medium hover:text-gray-900 transition-colors">
+                Contacts
+              </Link>
+              <Link href="/landing#officials" className="px-3 py-2 text-gray-700 text-sm tracking-tight font-medium hover:text-gray-900 transition-colors">
+                Barangay Officials
+              </Link>
+            </nav>
           </div>
-        </header>
+        </div>
+      </header>
 
-        <div className="messages-container" ref={chatContainerRef}>
-          {messages.map((message, i) => (
-            <div key={i} className={`message ${message.sender}`}>
-              {message.sender === 'bot' ? (
-                <div className={`message-content bot-message ${message.isError ? 'error' : ''}`}>
-                  <div dangerouslySetInnerHTML={{ __html: formatMessage(message.content) }} />
+      {/* main chat container */}
+      <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-6 pb-32">
+        {/* welcome heading with input below - only show when no messages */}
+        {messages.length === 0 && (
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
+                {getGreeting()}, How can I help you today?
+              </h1>
+              <p className="text-gray-600 text-xs tracking-tight">
+                I'm BaranGuide, your AI assistant for barangay services and information.
+              </p>
+            </div>
+            
+            {/* input area - below welcome text */}
+            <div className="w-full max-w-2xl mx-auto flex items-center justify-center">
+              <div className="w-full relative bg-gray-100 rounded-full">
+                <textarea ref={inputRef} value={input} onChange={(e) => setInput(e.target.value)} onKeyPress={handleKeyPress} placeholder="Type your questions here..." disabled={loading} rows={1} className="w-full px-4 py-4 pr-12 rounded-full border border-gray-200 text-xs text-gray-600 tracking-tight outline-none focus:outline-none disabled:bg-gray-50 disabled:cursor-not-allowed resize-none overflow-y-auto placeholder:text-gray-400 scrollbar-hide" />
+                <button onClick={handleSend} disabled={!input.trim() || loading} className="absolute right-2 bottom-3 p-2 bg-gray-900 rounded-full hover:bg-gray-900/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" title="Send message">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#ffffff" viewBox="0 0 256 256"><path d="M231.87,114l-168-95.89A16,16,0,0,0,40.92,37.34L71.55,128,40.92,218.67A16,16,0,0,0,56,240a16.15,16.15,0,0,0,7.93-2.1l167.92-96.05a16,16,0,0,0,.05-27.89ZM56,224a.56.56,0,0,0,0-.12L85.74,136H144a8,8,0,0,0,0-16H85.74L56.06,32.16A.46.46,0,0,0,56,32l168,95.83Z"></path></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* chat messages area */}
+        {(messages.length > 0 || loading) && (
+          <div className="flex-1 overflow-y-auto space-y-6 px-2 pt-8 scrollbar-hide">
+            {messages.map((message) => (
+            <div key={message.id} className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`} >
+              <div className={`flex gap-3 max-w-[85%] ${message.sender === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                {/* message bubble */}
+                <div
+                  className={`rounded-3xl px-4 py-3 ${
+                    message.sender === "user"
+                      ? "bg-gray-900 text-white"
+                      : "bg-gray-100 text-gray-900"
+                  }`}
+                >
+                  <p className="text-sm leading-relaxed tracking-tight whitespace-pre-wrap">
+                    {message.text}
+                  </p>
                 </div>
-              ) : (
-                <div className="message-content user-message">
-                  {message.content}
-                </div>
-              )}
+              </div>
             </div>
           ))}
 
+          {/* loading indicator */}
           {loading && (
-            <div className="message bot">
-              <div className="message-content bot-message loading">
-                <span className="dot"></span>
-                <span className="dot"></span>
-                <span className="dot"></span>
+            <div className="flex justify-start">
+              <div className="flex gap-3">
+                <div className="bg-gray-100 rounded-2xl px-4 py-3">
+                  <div className="flex gap-1.5">
+                    <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.15s" }}></div>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.3s" }}></div>
+                  </div>
                 </div>
               </div>
-            )}
+            </div>
+          )}
+
+            <div ref={messagesEndRef} />
           </div>
-
-        <form onSubmit={handleSubmit} className="input-area">
-          <input
-            type="text"
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-            placeholder="Type your message here..."
-            disabled={loading}
-          ref={inputRef}
-        />
-        <button type="submit" disabled={loading || !userInput.trim()}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
-            </svg>
-          </button>
-        </form>
+        )}
       </div>
-      <style jsx>{`
-        .page-wrapper { display: flex; }
-        .chat-container {
-          width: 100%;
-          height: calc(var(--vh, 1vh) * 100);
-          min-height: 0;
-          display: flex;
-          flex-direction: column;
-          background-color: white;
-          position: relative;
-          max-width: 100%;
-          margin: 0;
-        }
 
-        .city-seal-background {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-image: url('/olongapo-seal.png');
-          background-position: center;
-          background-size: contain;
-          background-repeat: no-repeat;
-          opacity: 0.03;
-          pointer-events: none;
-          z-index: 0;
-        }
-
-        header {
-          padding: 1rem;
-          border-bottom: 1px solid #eaeaea;
-          background-color: #ffffff;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .logo {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-
-        .mini-seal {
-          margin-right: 8px;
-        }
-        .chatbot-title {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: #4361ee;
-            letter-spacing: 0.01em;
-            margin-left: 6px;
-            white-space: nowrap;
-  }
-
-        .desktop-sidebar {
-          display: none;
-          width: 300px;
-          flex-shrink: 0;
-        }
-
-        .sidebar-card {
-          position: sticky;
-          top: 76px;
-          background: #ffffff;
-          border: 1px solid #eaeaea;
-          border-radius: 12px;
-          padding: 16px;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-        }
-        .sidebar-title-row { display:flex; align-items:center; justify-content:space-between; gap:8px; }
-        .sidebar-mini { flex:0 0 auto; }
-
-        .sidebar-title {
-          margin: 0 0 8px 0;
-          font-size: 1rem;
-          color: #111827;
-        }
-
-        .officials-list {
-          list-style: none;
-          padding: 0;
-          margin: 0 0 12px 0;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          font-size: 0.9rem;
-          color: #374151;
-        }
-
-        .year-badge {
-          margin-top: 12px;
-          font-weight: 700;
-          font-size: 1.25rem;
-          color: #4361ee;
-        }
-
-        .messages-container {
-          flex: 1;
-          padding: 1rem 0;
-          overflow-y: auto;
-          display: flex;
-          flex-direction: column;
-          gap: 0.8rem;
-          background-color: #f8f9fa;
-        }
-
-        .message {
-          display: flex;
-          margin-bottom: 0.5rem;
-        }
-
-        .bot {
-          justify-content: flex-start;
-        }
-
-        .user {
-          justify-content: flex-end;
-        }
-
-        .message-content {
-          padding: 0.8rem 1rem;
-          border-radius: 12px;
-          max-width: 80%;
-          overflow-wrap: break-word;
-        }
-
-        .bot-message {
-          background-color: #ffffff;
-          color: #333;
-          border-top-left-radius: 2px;
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .user-message {
-          background-color: #4361ee;
-          color: white;
-          border-top-right-radius: 2px;
-        }
-
-        .error {
-          background-color: #fff0f0;
-          border-left: 3px solid #ff4d4f;
-        }
-
-        .loading {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          min-width: 60px;
-        }
-
-        .dot {
-          width: 8px;
-          height: 8px;
-          background-color: #999;
-          border-radius: 50%;
-          margin: 0 3px;
-          animation: bounce 1.5s infinite ease-in-out;
-        }
-
-        .dot:nth-child(1) {
-          animation-delay: 0s;
-        }
-
-        .dot:nth-child(2) {
-          animation-delay: 0.3s;
-        }
-
-        .dot:nth-child(3) {
-          animation-delay: 0.6s;
-        }
-
-        @keyframes bounce {
-          0%, 80%, 100% {
-            transform: translateY(0);
-          }
-          40% {
-            transform: translateY(-8px);
-          }
-        }
-
-        .input-area {
-          display: flex;
-          padding: 1rem;
-          border-top: 1px solid #eaeaea;
-          background-color: #ffffff;
-        }
-
-        input {
-          flex: 1;
-          padding: 0.8rem 1rem;
-          border: 1px solid #e0e0e0;
-          border-radius: 24px;
-          outline: none;
-          font-size: 1rem;
-        }
-
-        input:focus {
-          border-color: #4361ee;
-        }
-
-        button {
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          background-color: #4361ee;
-          color: white;
-          border: none;
-          margin-left: 0.5rem;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: background-color 0.2s;
-        }
-
-        button:hover {
-          background-color: #3a56d4;
-        }
-
-        button:disabled {
-          background-color: #c5c5c5;
-          cursor: not-allowed;
-        }
-
-        button svg {
-          width: 24px;
-          height: 24px;
-        }
-
-        @media (max-width: 1024px) {
-          .desktop-sidebar {
-            display: none;
-          }
-          .messages-container {
-            padding: 0.5rem 0.2rem;
-          }
-        }
-
-        @media (min-width: 1025px) {
-          .desktop-sidebar {
-            display: block;
-          }
-          .page-wrapper { gap: 16px; padding: 0 16px; }
-        }
-
-        @media (max-width: 768px) {
-          .chat-container {
-            max-width: 100vw;
-            padding: 0;
-          }
-          .input-area {
-            padding: 0.5rem 0.2rem;
-          }
-          .city-seal-background {
-            background-size: 90vw !important;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .messages-container {
-            padding: 0.3rem 0.1rem;
-          }
-          .input-area {
-            padding: 0.3rem 0.1rem;
-          }
-          .city-seal-background {
-            background-size: 120vw !important;
-          }
-        }
-      `}</style>
+      {/* input area - fixed at bottom (only show when messages exist) */}
+      {messages.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white z-40">
+          <div className="max-w-4xl mx-auto px-6 py-4">
+            <div className="flex items-end gap-3">
+            <div className="w-full relative rounded-full">
+                <textarea ref={inputRef} value={input} onChange={(e) => setInput(e.target.value)} onKeyPress={handleKeyPress} placeholder="Type your questions here..." disabled={loading} rows={1} className="w-full px-4 py-4 pr-12 rounded-full border border-gray-200 text-xs text-gray-600 tracking-tight outline-none focus:outline-none disabled:bg-gray-50 disabled:cursor-not-allowed resize-none overflow-y-auto placeholder:text-gray-400 scrollbar-hide" />
+                <button onClick={handleSend} disabled={!input.trim() || loading} className="absolute right-2 bottom-3 p-2 bg-gray-900 rounded-full hover:bg-gray-900/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" title="Send message">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#ffffff" viewBox="0 0 256 256"><path d="M231.87,114l-168-95.89A16,16,0,0,0,40.92,37.34L71.55,128,40.92,218.67A16,16,0,0,0,56,240a16.15,16.15,0,0,0,7.93-2.1l167.92-96.05a16,16,0,0,0,.05-27.89ZM56,224a.56.56,0,0,0,0-.12L85.74,136H144a8,8,0,0,0,0-16H85.74L56.06,32.16A.46.46,0,0,0,56,32l168,95.83Z"></path></svg>
+                </button>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-2 text-center tracking-tight">
+              BaranGuide may make mistakes. Please verify the information before acting on it.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
-} 
+}
+

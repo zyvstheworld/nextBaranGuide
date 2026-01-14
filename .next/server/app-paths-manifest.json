@@ -1,7 +1,7 @@
 {
-  "/not-found": "app/not-found.js",
+  "/manifest.webmanifest/route": "app/manifest.webmanifest/route.js",
+  "/page": "app/page.js",
   "/chatbot/page": "app/chatbot/page.js",
-  "/admin/services/page": "app/admin/services/page.js",
-  "/admin/login/page": "app/admin/login/page.js",
-  "/admin/faqs/page": "app/admin/faqs/page.js"
+  "/api/chatbot/message/route": "app/api/chatbot/message/route.js",
+  "/landing/page": "app/landing/page.js"
 }
