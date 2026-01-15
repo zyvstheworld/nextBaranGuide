@@ -146,7 +146,7 @@ export default function ChatbotPage() {
   ];
 
   return (
-    <div className="min-h-screen p-6 bg-white">
+    <div className="min-h-screen p-4 md:p-6 bg-white">
       {/* hero section with background image */}
       <section className="relative rounded-3xl py-6 overflow-hidden">
         {/* background image */}
@@ -181,30 +181,30 @@ export default function ChatbotPage() {
         </header>
 
         {/* hero content area */}
-        <div className="relative mt-32">
-          <div className="max-w-4xl mx-auto text-center">
+        <div className="relative mt-16 md:mt-32">
+          <div className="max-w-4xl mx-auto text-center px-4">
             {/* main hero heading */}
-            <h2 className="text-5xl font-bold text-white mb-4 tracking-tight drop-shadow-lg">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight drop-shadow-lg">
               Stay One Step Ahead with AI-Driven Barangay Assistance
             </h2>
             {/* hero description text */}
-            <p className="text-md text-white/90 mb-12 leading-relaxed tracking-tight drop-shadow-md">
+            <p className="text-sm md:text-md text-white/90 mb-8 md:mb-12 leading-relaxed tracking-tight drop-shadow-md">
               Baranguide simplifies barangay services, requirements, and local
               information through an intelligent, always-available AI chatbot.{" "}
             </p>
 
             {/* ai chatbot call-to-action button */}
-            <div className="flex justify-center mb-32">
-              <Link href="/chatbot" className="inline-flex items-center gap-2 px-8 py-4  bg-white text-gray-900 rounded-full text-sm" >
+            <div className="flex justify-center mb-16 md:mb-32">
+              <Link href="/chatbot" className="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-white text-gray-900 rounded-full text-sm" >
                 <span className="tracking-tight">Chat with AI Assistant</span>
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
+                <svg className="w-4 md:w-5 h-4 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </Link>
             </div>
 
             {/* info cards grid: office hours, location, and help */}
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
               {/* office hours card */}
               <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20 p-4 shadow-lg">
                 <div className="flex items-center gap-3">
@@ -266,16 +266,16 @@ export default function ChatbotPage() {
       </section>
 
       {/* our services section */}
-      <section id="services" className="py-20 md:py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-6 md:px-4">
+      <section id="services" className="py-12 md:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           {/* section heading */}
-          <div className="text-center mb-12">
-            <h2 className="text-5xl tracking-tight text-center md:text-3xl font-bold text-gray-900 mb-3">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-3xl md:text-5xl tracking-tight font-bold text-gray-900 mb-3">
               Our Barangay Services
             </h2>
           </div>
           {/* services grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {servicesLoading ? (
               <div className="col-span-full flex items-center justify-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -286,7 +286,7 @@ export default function ChatbotPage() {
               </div>
             ) : (
               services.map((service) => (
-                <div key={service.id} className="bg-white border border-gray-100 rounded-2xl p-6">
+                <div key={service.id} className="bg-white border border-gray-100 rounded-2xl p-4 md:p-6">
                   <div className="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center text-white mb-6">
                     {getServiceIcon(service.title)}
                   </div>
@@ -309,11 +309,11 @@ export default function ChatbotPage() {
       </section>
 
       {/* help center - faqs section */}
-      <section id="faqs" className="py-20 md:py-16">
-        <div className="max-w-4xl mx-auto px-6 md:px-4">
+      <section id="faqs" className="py-12 md:py-20">
+        <div className="max-w-4xl mx-auto px-4 md:px-6">
           {/* section heading */}
-          <div className="text-center mb-12">
-            <h2 className="text-5xl tracking-tight text-center md:text-3xl font-bold text-gray-900 mb-3">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-3xl md:text-5xl tracking-tight font-bold text-gray-900 mb-3">
               Frequently Asked Questions
             </h2>
                 </div>
@@ -330,7 +330,7 @@ export default function ChatbotPage() {
             ) : (
               faqs.map((faq) => (
                 <div key={faq.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden" >
-                  <button onClick={() => setOpenFaq(openFaq === faq.id ? null : faq.id)} className="w-full px-6 py-5 text-left flex items-center justify-between" >
+                  <button onClick={() => setOpenFaq(openFaq === faq.id ? null : faq.id)} className="w-full px-4 md:px-6 py-4 md:py-5 text-left flex items-center justify-between" >
                     <span className="font-semibold tracking-tight text-sm text-gray-900 pr-4">
                       {faq.question}
                     </span>
@@ -339,7 +339,7 @@ export default function ChatbotPage() {
                     </svg>
                   </button>
                   {openFaq === faq.id && (
-                    <div className="px-6 pb-5 text-xs tracking-tight text-gray-600 leading-relaxed">
+                    <div className="px-4 md:px-6 pb-5 text-sm md:text-xs tracking-tight text-gray-600 leading-relaxed">
                       {faq.answer}
                     </div>
                   )}
@@ -348,20 +348,20 @@ export default function ChatbotPage() {
             )}
           </div>
           {/* still have questions cta banner */}
-          <div className="mt-12 bg-gray-900 rounded-3xl px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="mt-8 md:mt-12 bg-gray-900 rounded-3xl px-4 md:px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
             <div>
               <h3 className="text-sm font-semibold tracking-tight text-white mb-1">
                 Still have a questions?
               </h3>
-              <p className="text-gray-300 text-xs tracking-tight">
+              <p className="text-gray-300 text-sm md:text-xs tracking-tight">
                 Got more questions? We're here to help!
               </p>
             </div>
-            <a href="/chatbot" className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-full font-semibold whitespace-nowrap" >
+            <a href="/chatbot" className="inline-flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-white text-gray-900 rounded-full font-semibold whitespace-nowrap" >
               <span className="tracking-tight text-sm">
                 Chat with AI Assistant
               </span>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
+              <svg className="w-4 md:w-5 h-4 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </a>
@@ -370,45 +370,45 @@ export default function ChatbotPage() {
       </section>
 
       {/* get in touch / contact section */}
-      <section id="contacts" className="py-20 md:py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-6 md:px-4">
+      <section id="contacts" className="py-12 md:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           {/* section heading */}
-          <div className="text-center mb-12">
-            <h2 className="text-5xl tracking-tight text-center md:text-3xl font-bold text-gray-900 mb-3">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-3xl md:text-5xl tracking-tight font-bold text-gray-900 mb-3">
               Contact Us
             </h2>
           </div>
           {/* contact info grid */}
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
             <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-6 py-5 flex items-center gap-4">
+              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8.44,8.44,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z"></path></svg>
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-sm text-gray-900 tracking-tight mb-1">Phone Number</h3>
-                  <p className="text-gray-600 text-xs tracking-tight">(047) 222-1234</p>
+                  <p className="text-gray-600 text-sm md:text-xs tracking-tight">(047) 222-1234</p>
                 </div>
               </div>
             </div>
             <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-6 py-5 flex items-center gap-4">
+              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM203.43,64,128,133.15,52.57,64ZM216,192H40V74.19l82.59,75.71a8,8,0,0,0,10.82,0L216,74.19V192Z"></path></svg>                
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-sm text-gray-900 tracking-tight mb-1">Email Address</h3>
-                  <p className="text-gray-600 text-xs tracking-tight">info@oldcabalan.gov.ph</p>
+                  <p className="text-gray-600 text-sm md:text-xs tracking-tight">info@oldcabalan.gov.ph</p>
                 </div>
               </div>
             </div>
             <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-6 py-5 flex items-center gap-4">
+              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256"><path d="M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"></path></svg>                </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-sm text-gray-900 tracking-tight mb-1">Address</h3>
-                  <p className="text-gray-600 text-xs tracking-tight">Old Cabalan, Olongapo City</p>
+                  <p className="text-gray-600 text-sm md:text-xs tracking-tight">Old Cabalan, Olongapo City</p>
                 </div>
               </div>
             </div>
@@ -417,18 +417,18 @@ export default function ChatbotPage() {
       </section>
 
       {/* barangay officials section */}
-      <section id="officials" className="py-20 md:py-16">
-        <div className="max-w-7xl mx-auto px-6 md:px-4">
+      <section id="officials" className="py-12 md:py-20">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           {/* section heading */}
-          <div className="text-center mb-12">
-            <h2 className="text-5xl tracking-tight text-center md:text-3xl font-bold text-gray-900 mb-3">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-3xl md:text-5xl tracking-tight font-bold text-gray-900 mb-3">
               Old Cabalan Barangay Officials
             </h2>
           </div>
           {/* officials card container */}
-          <div className="bg-white rounded-2xl p-8 md:p-6">
+          <div className="bg-white rounded-2xl p-6 md:p-8">
             {/* officials list grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {officials.map((official, index) => (
                 <div key={index} className="flex items-center gap-3 border border-gray-200 px-6 py-4 rounded-2xl">
                   <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -437,7 +437,7 @@ export default function ChatbotPage() {
                     <p className="font-semibold tracking-tight text-sm text-gray-900">
                       {official.name}
                     </p>
-                    <p className="text-xs tracking-tight text-gray-600">
+                    <p className="text-sm md:text-xs tracking-tight text-gray-600">
                       {official.position}
                     </p>
                   </div>
@@ -449,39 +449,39 @@ export default function ChatbotPage() {
       </section>
 
       {/* footer section */}
-      <footer className="relative text-gray-900 py-12 rounded-3xl overflow-hidden">
+      <footer className="relative text-gray-900 py-8 md:py-12 rounded-3xl overflow-hidden">
         {/* natural scattered gradient overlay with blurred circles */}
         <div className="absolute inset-0 opacity-60">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl"></div>
-          <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl"></div>
+          <div className="absolute top-0 left-0 w-64 md:w-96 h-64 md:h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl"></div>
+          <div className="absolute top-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl"></div>
+          <div className="absolute bottom-0 left-1/2 w-64 md:w-96 h-64 md:h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl"></div>
         </div>
         {/* base gradient layer */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-indigo-50/60 to-purple-50/80"></div>
         
-        <div className="relative max-w-7xl mx-auto px-6 md:px-4">
+        <div className="relative max-w-7xl mx-auto px-4 md:px-6">
           {/* footer content grid */}
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
             <div>
               <h4 className="text-gray-900 font-semibold tracking-tight mb-4">Quick Links</h4>
               <ul className="space-y-1 text-sm">
                 <li>
-                  <Link href="/chatbot" className="text-gray-700 text-xs font-medium tracking-tight hover:text-gray-900 transition-colors" >
+                  <Link href="/chatbot" className="text-gray-700 text-sm md:text-xs font-medium tracking-tight hover:text-gray-900 transition-colors" >
                     AI Chatbot
                   </Link>
                 </li>
                 <li>
-                  <a href="#services" className="text-gray-700 text-xs font-medium tracking-tight hover:text-gray-900 transition-colors" >
+                  <a href="#services" className="text-gray-700 text-sm md:text-xs font-medium tracking-tight hover:text-gray-900 transition-colors" >
                     Services
                   </a>
                 </li>
                 <li>
-                  <a href="#faqs" className="text-gray-700 text-xs font-medium tracking-tight hover:text-gray-900 transition-colors">
+                  <a href="#faqs" className="text-gray-700 text-sm md:text-xs font-medium tracking-tight hover:text-gray-900 transition-colors">
                     FAQs
                   </a>
                 </li>
                 <li>
-                  <a href="#contact" className="text-gray-700 text-xs font-medium tracking-tight hover:text-gray-900 transition-colors" >
+                  <a href="#contact" className="text-gray-700 text-sm md:text-xs font-medium tracking-tight hover:text-gray-900 transition-colors" >
                     Contact
                   </a>
                 </li>
@@ -489,7 +489,7 @@ export default function ChatbotPage() {
             </div>
             <div>
               <h4 className="text-gray-900 font-semibold tracking-tight mb-4">Contact Info</h4>
-              <ul className="space-y-2 text-xs tracking-tight font-medium text-gray-700">
+              <ul className="space-y-2 text-sm md:text-xs tracking-tight font-medium text-gray-700">
                 <li>(047) 222-1234</li>
                 <li>info@oldcabalan.gov.ph</li>
                 <li>Old Cabalan, Olongapo City</li>
@@ -498,12 +498,12 @@ export default function ChatbotPage() {
             <div className="flex flex-col justify-between">
               <div>
                 <h4 className="text-gray-900 font-bold tracking-tighter mb-1">Stay One Step Ahead with AI-Driven Barangay Assistance</h4>
-                <p className="text-xs tracking-tight leading-relaxed text-gray-700">
+                <p className="text-sm md:text-xs tracking-tight leading-relaxed text-gray-700">
                   Baranguide simplifies barangay services, requirements, and local information through an intelligent, always-available AI chatbot.
                 </p>
               </div>
               {/* copyright notice */}
-              <div className="text-start text-xs tracking-tight text-gray-700">
+              <div className="text-start text-sm md:text-xs tracking-tight text-gray-700">
                 <p>
                   &copy; {new Date().getFullYear()} BaranGuide - Barangay Old
                   Cabalan. All rights reserved.
