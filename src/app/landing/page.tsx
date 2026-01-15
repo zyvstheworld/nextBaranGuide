@@ -185,7 +185,7 @@ export default function ChatbotPage() {
           <div className="max-w-4xl mx-auto text-center px-4">
             {/* main hero heading */}
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight drop-shadow-lg">
-              Stay One Step Ahead with AI-Driven Barangay Assistance
+              Welcome to Barangay Old Cabalan with BaranGuide
             </h2>
             {/* hero description text */}
             <p className="text-sm md:text-md text-white/90 mb-8 md:mb-12 leading-relaxed tracking-tight drop-shadow-md">
