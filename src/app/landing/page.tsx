@@ -817,7 +817,7 @@ export default function ChatbotPage() {
             </div>
             <div className="flex flex-col justify-between">
               <div>
-                <h4 className="text-gray-900 font-bold tracking-tighter mb-1">Stay One Step Ahead with AI-Driven Barangay Assistance</h4>
+                <h4 className="text-gray-900 font-bold tracking-tighter mb-1">Welcome to Barangay Old Cabalan with BaranGuide</h4>
                 <p className="text-sm md:text-xs tracking-tight leading-relaxed text-gray-700">
                   Baranguide simplifies barangay services, requirements, and local information through an intelligent, always-available AI chatbot.
                 </p>
