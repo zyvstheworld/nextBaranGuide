@@ -9,6 +9,7 @@ const navLinks = [
   { name: "Dashboard", href: "/admin/dashboard", icon: "📊" },
   { name: "Services", href: "/admin/services", icon: "📄" },
   { name: "FAQs", href: "/admin/faqs", icon: "❓" },
+  { name: "Reports", href: "/admin/reports", icon: "📈" },
 ];
 
 function Sidebar({ pathname }: { pathname: string }) {
