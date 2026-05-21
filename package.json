@@ -7,7 +7,9 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"icons": "node ./scripts/generate-icons.mjs"
+		"icons": "node ./scripts/generate-icons.mjs",
+	"seed:demographics": "node ./scripts/seed-demographics-simple.mjs",
+	"seed:officials": "node ./scripts/seed-officials-simple.mjs"
 	},
 	"dependencies": {
 		"@google/generative-ai": "^0.24.1",

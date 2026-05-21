@@ -9,6 +9,8 @@ const navLinks = [
   { name: "Dashboard", href: "/admin/dashboard", icon: "📊" },
   { name: "Services", href: "/admin/services", icon: "📄" },
   { name: "FAQs", href: "/admin/faqs", icon: "❓" },
+  { name: "Officials", href: "/admin/officials", icon: "👥" },
+  { name: "Announcements", href: "/admin/announcements", icon: "📢" },
   { name: "Reports", href: "/admin/reports", icon: "📈" },
 ];
 

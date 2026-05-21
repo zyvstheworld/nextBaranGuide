@@ -19,6 +19,31 @@ interface Service {
   duration: string;
 }
 
+interface Announcement {
+  id: string;
+  title: string;
+  content: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Demographic {
+  id: string;
+  category: string;
+  label: string;
+  value: number;
+  icon: string;
+  order: number;
+}
+
+interface Official {
+  id: string;
+  name: string;
+  position: string;
+  order: number;
+}
+
 export default function ChatbotPage() {
   // state for managing which faq is currently open
   const [openFaq, setOpenFaq] = useState<string | null>(null);
@@ -30,6 +55,31 @@ export default function ChatbotPage() {
   const [services, setServices] = useState<Service[]>([]);
   // state for services loading
   const [servicesLoading, setServicesLoading] = useState(true);
+  // state for announcements from database
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  // state for announcements loading
+  const [announcementsLoading, setAnnouncementsLoading] = useState(true);
+  // state for demographics from database
+  const [demographics, setDemographics] = useState<Demographic[]>([]);
+  // state for demographics loading
+  const [demographicsLoading, setDemographicsLoading] = useState(true);
+  // state for officials from database
+  const [officials, setOfficials] = useState<Official[]>([
+    { name: "Hon. Rolando A. Alba Jr.", position: "Punong Barangay", order: 1, id: "default-1" },
+    { name: "Hon. Jose B. Galang Jr.", position: "Barangay Kagawad", order: 2, id: "default-2" },
+    { name: "Hon. Gerardo D. Andrade", position: "Barangay Kagawad", order: 3, id: "default-3" },
+    { name: "Hon. Roderick T. Gaton", position: "Barangay Kagawad", order: 4, id: "default-4" },
+    { name: "Hon. Glenda C. Flores", position: "Barangay Kagawad", order: 5, id: "default-5" },
+    { name: "Hon. Ferdinand R. Dicen", position: "Barangay Kagawad", order: 6, id: "default-6" },
+    { name: "Hon. Joey A. Maglalang", position: "Barangay Kagawad", order: 7, id: "default-7" },
+    { name: "Hon. Jerome L. Ducos", position: "Barangay Kagawad", order: 8, id: "default-8" },
+    { name: "Hon. Randy A. Liwanag", position: "IPMR", order: 9, id: "default-9" },
+    { name: "Hon. Angel Victoria M. Bibanco", position: "SK Chairperson", order: 10, id: "default-10" },
+    { name: "Mr. Edmer T. Lucido", position: "Barangay Secretary", order: 11, id: "default-11" },
+    { name: "Ms. Adora F. Gada", position: "Barangay Treasurer", order: 12, id: "default-12" },
+  ]);
+  // state for officials loading
+  const [officialsLoading, setOfficialsLoading] = useState(true);
 
   // helper function to get icon based on service title
   const getServiceIcon = (title: string) => {
@@ -129,21 +179,72 @@ export default function ChatbotPage() {
     fetchFaqs();
   }, []);
 
-  // barangay officials data for 2024 administration
-  const officials = [
-    { name: "Hon. Rolando A. Alba Jr.", position: "Punong Barangay" },
-    { name: "Hon. Jose B. Galang Jr.", position: "Barangay Kagawad" },
-    { name: "Hon. Gerardo Q. Andrade", position: "Barangay Kagawad" },
-    { name: "Hon. Roderick T. Gaton", position: "Barangay Kagawad" },
-    { name: "Hon. Glenda C. Flores", position: "Barangay Kagawad" },
-    { name: "Hon. Ferdinand R. Dicen", position: "Barangay Kagawad" },
-    { name: "Hon. Joey A. Maglalang", position: "Barangay Kagawad" },
-    { name: "Hon. Jerome L. Duos", position: "Barangay Kagawad" },
-    { name: "Hon. Zenaida L. Miranda", position: "IPMR" },
-    { name: "Hon. Angel Victoria M. Bibanco", position: "SK Chairperson" },
-    { name: "Mr. Edmer T. Lucido", position: "Barangay Secretary" },
-    { name: "Ms. Rosalinda P. Eledia", position: "Barangay Treasurer" },
-  ];
+  // fetch announcements from supabase
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        setAnnouncementsLoading(true);
+        const { data, error } = await supabase
+          .from("announcements")
+          .select("*")
+          .eq("is_active", true)
+          .order("created_at", { ascending: false });
+        
+        if (error) {
+          console.error("Error fetching announcements:", error);
+        } else if (data) {
+          setAnnouncements(data);
+        }
+      } catch (err) {
+        console.error("Error fetching announcements:", err);
+      } finally {
+        setAnnouncementsLoading(false);
+      }
+    };
+
+    fetchAnnouncements();
+  }, []);
+
+  // fetch demographics from API
+  useEffect(() => {
+    const fetchDemographics = async () => {
+      try {
+        setDemographicsLoading(true);
+        const response = await fetch("/api/admin/demographics");
+        if (!response.ok) throw new Error("Failed to fetch demographics");
+        const data = await response.json();
+        setDemographics(data);
+      } catch (err) {
+        console.error("Error fetching demographics:", err);
+        // Fallback to empty array if API fails
+        setDemographics([]);
+      } finally {
+        setDemographicsLoading(false);
+      }
+    };
+
+    fetchDemographics();
+  }, []);
+
+  useEffect(() => {
+    const fetchOfficials = async () => {
+      try {
+        setOfficialsLoading(true);
+        const response = await fetch("/api/admin/officials");
+        if (!response.ok) throw new Error("Failed to fetch officials");
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setOfficials(data);
+        }
+      } catch (err) {
+        console.error("Error fetching officials:", err);
+      } finally {
+        setOfficialsLoading(false);
+      }
+    };
+
+    fetchOfficials();
+  }, []);
 
   return (
     <div className="min-h-screen p-4 md:p-6 bg-white">
@@ -164,6 +265,9 @@ export default function ChatbotPage() {
               <Image src="/baranguide-log.png" alt="BaranGuide Logo" width={150} height={50} className="h-10 w-auto" />
         </div>
             <nav className="hidden md:flex items-center gap-4 lg:gap-4">
+              <a href="#announcements" className="px-3 py-2 text-white text-sm tracking-tight font-medium hover:text-gray-200 transition-colors whitespace-nowrap" >
+                Announcements
+              </a>
               <a href="#services" className="px-3 py-2 text-white text-sm tracking-tight font-medium hover:text-gray-200 transition-colors whitespace-nowrap" >
                 Our Services
               </a>
@@ -308,6 +412,55 @@ export default function ChatbotPage() {
         </div>
       </section>
 
+      {/* announcements section */}
+      {announcements.length > 0 && (
+        <section id="announcements" className="py-12 md:py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 md:px-6">
+            {/* section heading */}
+            <div className="text-center mb-8 md:mb-12">
+              <h2 className="text-3xl md:text-5xl tracking-tight font-bold text-gray-900 mb-3">
+                Announcements
+              </h2>
+              <p className="text-sm md:text-base tracking-tight text-gray-600 max-w-2xl mx-auto">
+                Stay informed with the latest news and updates from Barangay Old Cabalan
+              </p>
+            </div>
+
+            {/* announcements grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {announcementsLoading ? (
+                <div className="col-span-full flex items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                </div>
+              ) : (
+                announcements.map((announcement) => (
+                  <div
+                    key={announcement.id}
+                    className="bg-white border border-gray-100 rounded-2xl p-4 md:p-6"
+                  >
+                    <h3 className="text-lg font-bold tracking-tight text-gray-900 mb-2 line-clamp-2">
+                      {announcement.title}
+                    </h3>
+
+                    <p className="text-gray-600 text-sm tracking-tight leading-relaxed line-clamp-3 mb-3">
+                      {announcement.content}
+                    </p>
+
+                    <div className="text-xs text-gray-500">
+                      {new Date(announcement.created_at).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* barangay demographics section */}
       <section id="demographics" className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
@@ -322,199 +475,31 @@ export default function ChatbotPage() {
           </div>
           {/* demographics grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {/* Population */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M27.2,126.4a8,8,0,0,0,11.2-1.6,52,52,0,0,1,83.2,0,8,8,0,0,0,11.2,1.59,7.73,7.73,0,0,0,1.59-1.59h0a52,52,0,0,1,83.2,0,8,8,0,0,0,12.8-9.61A67.85,67.85,0,0,0,203,93.51a40,40,0,1,0-53.94,0,67.27,67.27,0,0,0-21,14.31,67.27,67.27,0,0,0-21-14.31,40,40,0,1,0-53.94,0A67.88,67.88,0,0,0,25.6,115.2,8,8,0,0,0,27.2,126.4ZM176,40a24,24,0,1,1-24,24A24,24,0,0,1,176,40ZM80,40A24,24,0,1,1,56,64,24,24,0,0,1,80,40ZM203,197.51a40,40,0,1,0-53.94,0,67.27,67.27,0,0,0-21,14.31,67.27,67.27,0,0,0-21-14.31,40,40,0,1,0-53.94,0A67.88,67.88,0,0,0,25.6,219.2a8,8,0,1,0,12.8,9.6,52,52,0,0,1,83.2,0,8,8,0,0,0,11.2,1.59,7.73,7.73,0,0,0,1.59-1.59h0a52,52,0,0,1,83.2,0,8,8,0,0,0,12.8-9.61A67.85,67.85,0,0,0,203,197.51ZM80,144a24,24,0,1,1-24,24A24,24,0,0,1,80,144Zm96,0a24,24,0,1,1-24,24A24,24,0,0,1,176,144Z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Total Population</p>
-                  <h3 className="text-2xl md:text-3xl tracking-tight font-bold text-gray-900 mb-1">24,571</h3>
-                </div>
+            {demographicsLoading ? (
+              <div className="col-span-full flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
               </div>
-            </div>
-
-            {/* Land Area */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M228.92,49.69a8,8,0,0,0-6.86-1.45L160.93,63.52,99.58,32.84a8,8,0,0,0-5.52-.6l-64,16A8,8,0,0,0,24,56V200a8,8,0,0,0,9.94,7.76l61.13-15.28,61.35,30.68A8.15,8.15,0,0,0,160,224a8,8,0,0,0,1.94-.24l64-16A8,8,0,0,0,232,200V56A8,8,0,0,0,228.92,49.69ZM104,52.94l48,24V203.06l-48-24ZM40,62.25l48-12v127.5l-48,12Zm176,131.5-48,12V78.25l48-12Z"></path>
-                  </svg>
+            ) : demographics.length > 0 ? (
+              demographics.map((demo) => (
+                <div key={demo.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                  <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0 text-lg">
+                      {demo.icon}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs text-gray-600 tracking-tight">{demo.label}</p>
+                      <h3 className="text-2xl md:text-3xl tracking-tight font-bold text-gray-900 mb-1">
+                        {demo.value.toLocaleString()}
+                      </h3>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Land Area (hectares)</p>
-                  <h3 className="text-2xl md:text-3xl tracking-tight font-bold text-gray-900 mb-1">1,200</h3>
-                </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12 text-gray-500">
+                <p>No demographics data available at the moment.</p>
               </div>
-            </div>
-
-            {/* Households */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M240,208H224V136l2.34,2.34A8,8,0,0,0,237.66,127L139.31,28.68a16,16,0,0,0-22.62,0L18.34,127a8,8,0,0,0,11.32,11.31L32,136v72H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM48,120l80-80,80,80v88H160V152a8,8,0,0,0-8-8H104a8,8,0,0,0-8,8v56H48Zm96,88H112V160h32Z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Households</p>
-                  <h3 className="text-2xl md:text-3xl tracking-tight font-bold text-gray-900 mb-1">7,680</h3>
-                </div>
-              </div>
-            </div>
-
-            {/* Registered Voters */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M200,112a8,8,0,0,1-8,8H152a8,8,0,0,1,0-16h40A8,8,0,0,1,200,112Zm-8,24H152a8,8,0,0,0,0,16h40a8,8,0,0,0,0-16Zm40-80V200a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56ZM216,200V56H40V200H216Zm-80.26-34a8,8,0,1,1-15.5,4c-2.63-10.26-13.06-18-24.25-18s-21.61,7.74-24.25,18a8,8,0,1,1-15.5-4,39.84,39.84,0,0,1,17.19-23.34,32,32,0,1,1,45.12,0A39.76,39.76,0,0,1,135.75,166ZM96,136a16,16,0,1,0-16-16A16,16,0,0,0,96,136Z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Registered Voters</p>
-                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 mb-1">9,370</h3>                </div>
-              </div>
-            </div>
-
-            {/* Precincts */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M240,208H224V96a16,16,0,0,0-16-16H144V32a16,16,0,0,0-24.88-13.32L39.12,72A16,16,0,0,0,32,85.34V208H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM208,96V208H144V96ZM48,85.34,128,32V208H48ZM112,112v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm-32,0v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm0,56v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Zm32,0v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Precincts</p>
-                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 mb-1">102</h3>
-                </div>
-              </div>
-            </div>
-
-            {/* Families */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M244.8,150.4a8,8,0,0,1-11.2-1.6A51.6,51.6,0,0,0,192,128a8,8,0,0,1-7.37-4.89,8,8,0,0,1,0-6.22A8,8,0,0,1,192,112a24,24,0,1,0-23.24-30,8,8,0,1,1-15.5-4A40,40,0,1,1,219,117.51a67.94,67.94,0,0,1,27.43,21.68A8,8,0,0,1,244.8,150.4ZM190.92,212a8,8,0,1,1-13.84,8,57,57,0,0,0-98.16,0,8,8,0,1,1-13.84-8,72.06,72.06,0,0,1,33.74-29.92,48,48,0,1,1,58.36,0A72.06,72.06,0,0,1,190.92,212ZM128,176a32,32,0,1,0-32-32A32,32,0,0,0,128,176ZM72,120a8,8,0,0,0-8-8A24,24,0,1,1,87.24,82a8,8,0,1,0,15.5-4A40,40,0,1,0,37,117.51,67.94,67.94,0,0,0,9.6,139.19a8,8,0,1,0,12.8,9.61A51.6,51.6,0,0,1,64,128,8,8,0,0,0,72,120Z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Families</p>
-                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 mb-1">5,852</h3>
-                </div>
-              </div>
-            </div>
-
-            {/* Male */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M216,32H168a8,8,0,0,0,0,16h28.69L154.62,90.07a80,80,0,1,0,11.31,11.31L208,59.32V88a8,8,0,0,0,16,0V40A8,8,0,0,0,216,32ZM149.24,197.29a64,64,0,1,1,0-90.53A64.1,64.1,0,0,1,149.24,197.29Z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Male</p>
-                  <h3 className="text-2xl md:text-3xl tracking-tight font-bold text-gray-900 mb-1">10,566</h3>
-                </div>
-              </div>
-            </div>
-
-            {/* Female */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M208,96a80,80,0,1,0-88,79.6V200H88a8,8,0,0,0,0,16h32v24a8,8,0,0,0,16,0V216h32a8,8,0,0,0,0-16H136V175.6A80.11,80.11,0,0,0,208,96ZM64,96a64,64,0,1,1,64,64A64.07,64.07,0,0,1,64,96Z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Female</p>
-                  <h3 className="text-2xl md:text-3xl tracking-tight font-bold text-gray-900 mb-1">14,005</h3>
-                </div>
-              </div>
-            </div>
-
-            {/* Married */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Married</p>
-                  <h3 className="text-2xl md:text-3xl tracking-tight font-bold text-gray-900 mb-1">16,823</h3>
-                </div>
-              </div>
-            </div>
-
-            {/* Unmarried */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M178,40a61.6,61.6,0,0,0-43.84,18.16L128,64.32l-6.16-6.16A62,62,0,0,0,16,102c0,70,103.79,126.67,108.21,129a8,8,0,0,0,7.58,0C136.21,228.67,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102a46,46,0,0,1,78.53-32.53l6.16,6.16L106.34,86a8,8,0,0,0,0,11.31l24.53,24.53-16.53,16.52a8,8,0,0,0,11.32,11.32l22.18-22.19a8,8,0,0,0,0-11.31L123.31,91.63l22.16-22.16A46,46,0,0,1,224,102C224,155.61,146.24,204.15,128,214.8Z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Unmarried</p>
-                  <h3 className="text-2xl md:text-3xl tracking-tight font-bold text-gray-900 mb-1">5,471</h3>
-                </div>
-              </div>
-            </div>
-
-            {/* Filipino */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M42.76,50A8,8,0,0,0,40,56V224a8,8,0,0,0,16,0V179.77c26.79-21.16,49.87-9.75,76.45,3.41,16.4,8.11,34.06,16.85,53,16.85,13.93,0,28.54-4.75,43.82-18a8,8,0,0,0,2.76-6V56A8,8,0,0,0,218.76,50c-28,24.23-51.72,12.49-79.21-1.12C111.07,34.76,78.78,18.79,42.76,50ZM216,172.25c-26.79,21.16-49.87,9.74-76.45-3.41-25-12.35-52.81-26.13-83.55-8.4V59.79c26.79-21.16,49.87-9.75,76.45,3.4,25,12.35,52.82,26.13,83.55,8.4Z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Filipino</p>
-                  <h3 className="text-2xl md:text-3xl tracking-tight font-bold text-gray-900 mb-1">24,570</h3>
-                </div>
-              </div>
-            </div>
-
-            {/* Foreigner */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Foreigner</p>
-                  <h3 className="text-2xl md:text-3xl tracking-tight font-bold text-gray-900 mb-1">1</h3>
-                </div>
-              </div>
-            </div>
-
-            {/* Indigenous People */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-              <div className="px-4 md:px-6 py-4 md:py-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-white flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2563eb" viewBox="0 0 256 256">
-                    <path d="M230.33,141.06a24.34,24.34,0,0,0-18.61-4.77C230.5,117.33,240,98.48,240,80c0-26.47-21.29-48-47.46-48A47.58,47.58,0,0,0,156,48.75,47.58,47.58,0,0,0,119.46,32C93.29,32,72,53.53,72,80c0,11,3.24,21.69,10.06,33a31.87,31.87,0,0,0-14.75,8.4L44.69,144H16A16,16,0,0,0,0,160v40a16,16,0,0,0,16,16H120a7.93,7.93,0,0,0,1.94-.24l64-16a6.94,6.94,0,0,0,1.19-.4L226,182.82l.44-.2a24.6,24.6,0,0,0,3.93-41.56ZM119.46,48A31.15,31.15,0,0,1,148.6,67a8,8,0,0,0,14.8,0,31.15,31.15,0,0,1,29.14-19C209.59,48,224,62.65,224,80c0,19.51-15.79,41.58-45.66,63.9l-11.09,2.55A28,28,0,0,0,140,112H100.68C92.05,100.36,88,90.12,88,80,88,62.65,102.41,48,119.46,48ZM16,160H40v40H16Zm203.43,8.21-38,16.18L119,200H56V155.31l22.63-22.62A15.86,15.86,0,0,1,89.94,128H140a12,12,0,0,1,0,24H112a8,8,0,0,0,0,16h32a8.32,8.32,0,0,0,1.79-.2l67-15.41.31-.08a8.6,8.6,0,0,1,6.3,15.9Z"></path>
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-600 tracking-tight">Indigenous People (IPs)</p>
-                  <h3 className="text-2xl md:text-3xl tracking-tight font-bold text-gray-900 mb-1">693</h3>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>

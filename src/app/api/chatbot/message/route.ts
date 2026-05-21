@@ -19,17 +19,45 @@ async function getDatabaseContext() {
       .from('faqs')
       .select('*');
 
-    if (servicesError || faqsError) {
-      console.error('Error fetching context:', servicesError || faqsError);
+    // Fetch demographics from Supabase
+    const { data: demographics, error: demographicsError } = await supabase
+      .from('demographics')
+      .select('*')
+      .order('order', { ascending: true });
+
+    // Fetch officials from Supabase
+    const { data: officials, error: officialsError } = await supabase
+      .from('officials')
+      .select('*')
+      .order('order', { ascending: true });
+
+    if (servicesError || faqsError || demographicsError || officialsError) {
+      console.error('Error fetching context:', servicesError || faqsError || demographicsError || officialsError);
       return "";
     }
 
-    let context = "Here's information about our barangay services and frequently asked questions:\n\n";
+    let context = "Here's information about our barangay services, demographics, officials, and frequently asked questions:\n\n";
 
     context += "SERVICES:\n";
     services?.forEach(service => {
       context += `Service: ${service.title}\nRequirements: ${service.requirements}\nFee: ${service.price}\nDuration: ${service.duration}\n\n`;
     });
+
+    if (demographics && demographics.length > 0) {
+      context += "DEMOGRAPHICS:\n";
+      demographics.forEach(demo => {
+        context += `${demo.label}: ${demo.value}\n`;
+      });
+      context += "\n";
+    }
+
+    if (officials && officials.length > 0) {
+      context += "OFFICIALS:\n";
+      officials.forEach(official => {
+        context += `${official.position}: ${official.name}\n`;
+      });
+      context += "\n";
+    }
 
     context += "FREQUENTLY ASKED QUESTIONS:\n";
     faqs?.forEach(faq => {
