@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { createClient } from '@supabase/supabase-js';
-import { demographicsData } from '../src/lib/demographicsData.ts';
+import { demographicsData } from '../src/lib/demographicsData';
 
 // Get Supabase credentials from environment
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
