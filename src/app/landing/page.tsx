@@ -247,6 +247,19 @@ export default function ChatbotPage() {
     fetchOfficials();
   }, []);
 
+  // load government footer script on client after hydration to avoid mismatches
+  useEffect(() => {
+    const id = "gwt-footer-jsdk";
+    if (typeof document === "undefined") return;
+    if (document.getElementById(id)) return;
+    const gjs = document.getElementById("gwt-standard-footer");
+    if (!gjs) return;
+    const js = document.createElement("script");
+    js.id = id;
+    js.src = "//gwhs.i.gov.ph/gwt-footer/footer.js";
+    gjs.parentNode?.insertBefore(js, gjs);
+  }, []);
+
   return (
     <div className="min-h-screen p-4 md:p-6 bg-white">
       {/* hero section with background image */}
@@ -776,69 +789,8 @@ export default function ChatbotPage() {
       </section>
 
       {/* footer section */}
-      <footer className="relative text-gray-900 py-8 md:py-12 rounded-3xl overflow-hidden">
-        {/* natural scattered gradient overlay with blurred circles */}
-        <div className="absolute inset-0 opacity-60">
-          <div className="absolute top-0 left-0 w-64 md:w-96 h-64 md:h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl"></div>
-          <div className="absolute top-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl"></div>
-          <div className="absolute bottom-0 left-1/2 w-64 md:w-96 h-64 md:h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl"></div>
-        </div>
-        {/* base gradient layer */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-indigo-50/60 to-purple-50/80"></div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 md:px-6">
-          {/* footer content grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
-            <div>
-              <h4 className="text-gray-900 font-semibold tracking-tight mb-4">Quick Links</h4>
-              <ul className="space-y-1 text-sm">
-                <li>
-                  <Link href="/chatbot" className="text-gray-700 text-sm md:text-xs font-medium tracking-tight hover:text-gray-900 transition-colors" >
-                    AI Chatbot
-                  </Link>
-                </li>
-                <li>
-                  <a href="#services" className="text-gray-700 text-sm md:text-xs font-medium tracking-tight hover:text-gray-900 transition-colors" >
-                    Services
-                  </a>
-                </li>
-                <li>
-                  <a href="#faqs" className="text-gray-700 text-sm md:text-xs font-medium tracking-tight hover:text-gray-900 transition-colors">
-                    FAQs
-                  </a>
-                </li>
-                <li>
-                  <a href="#contact" className="text-gray-700 text-sm md:text-xs font-medium tracking-tight hover:text-gray-900 transition-colors" >
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-gray-900 font-semibold tracking-tight mb-4">Contact Info</h4>
-              <ul className="space-y-2 text-sm md:text-xs tracking-tight font-medium text-gray-700">
-                <li>(047) 222-1234</li>
-                <li>info@oldcabalan.gov.ph</li>
-                <li>Old Cabalan, Olongapo City</li>
-              </ul>
-            </div>
-            <div className="flex flex-col justify-between">
-              <div>
-                <h4 className="text-gray-900 font-bold tracking-tighter mb-1">Welcome to Barangay Old Cabalan with BaranGuide</h4>
-                <p className="text-sm md:text-xs tracking-tight leading-relaxed text-gray-700">
-                  Baranguide simplifies barangay services, requirements, and local information through an intelligent, always-available AI chatbot.
-                </p>
-              </div>
-              {/* copyright notice */}
-              <div className="text-start text-sm md:text-xs tracking-tight text-gray-700">
-                <p>
-                  &copy; {new Date().getFullYear()} BaranGuide - Barangay Old
-                  Cabalan. All rights reserved.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <footer className="govt-footer">
+        <div id="gwt-standard-footer"></div>
       </footer>
     </div>
   );
