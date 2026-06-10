@@ -44,6 +44,7 @@ export default function FAQsPage() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   // ---------------- FETCH FAQs ----------------
   const fetchFaqs = async () => {
@@ -74,6 +75,13 @@ export default function FAQsPage() {
 
     if (!form.question.trim() || !form.answer.trim()) {
       setError("Question and answer are required.");
+      return;
+    }
+
+    // Prevent multiple entries in a single FAQ field: disallow newlines or Q:/A: blocks
+    const multiEntryPattern = /\n|\r|Q:\s|A:\s/i;
+    if (multiEntryPattern.test(form.question) || multiEntryPattern.test(form.answer)) {
+      setError("Please submit a single question and a single answer. Remove extra Q/A pairs or newlines.");
       return;
     }
 
@@ -152,7 +160,7 @@ export default function FAQsPage() {
 
       // Parse FAQs
       const blocks = response.split(/\n\s*\n/);
-      const newFaqs = blocks
+      const parsedFaqs = blocks
         .map((block: string) => {
           const q = block.match(/Q:\s*(.+)/i);
           const a = block.match(/A:\s*(.+)/i);
@@ -161,11 +169,43 @@ export default function FAQsPage() {
         })
         .filter(Boolean) as { question: string; answer: string }[];
 
-      if (!newFaqs.length) throw new Error("No FAQs generated.");
+      if (!parsedFaqs.length) throw new Error("No FAQs generated.");
 
-      await supabaseClient.from("faqs").insert(newFaqs);
+      // Deduplicate parsed FAQs (by normalized question)
+      const normalize = (s: string) => s.trim().toLowerCase();
+      const seen = new Set<string>();
+      const uniqueNewFaqs: { question: string; answer: string }[] = [];
+      for (const f of parsedFaqs) {
+        const key = normalize(f.question);
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueNewFaqs.push(f);
+        }
+      }
 
-      setUploadMessage(`Uploaded ${newFaqs.length} FAQs successfully.`);
+      // Fetch existing questions to avoid inserting duplicates
+      const { data: existing, error: existingError } = await supabaseClient
+        .from("faqs")
+        .select("question");
+
+      const existingSet = new Set<string>();
+      if (!existingError && existing) {
+        for (const e of existing) {
+          if (e && e.question) existingSet.add(normalize(e.question));
+        }
+      }
+
+      const toInsert = uniqueNewFaqs.filter(f => !existingSet.has(normalize(f.question)));
+
+      if (toInsert.length === 0) {
+        const msg = "No new FAQs to add; all uploaded items already exist or were duplicates.";
+        setUploadMessage(msg);
+        setShowUploadModal(true);
+      } else {
+        await supabaseClient.from("faqs").insert(toInsert);
+        const skipped = uniqueNewFaqs.length - toInsert.length;
+        setUploadMessage(`Uploaded ${toInsert.length} FAQs successfully.${skipped > 0 ? ` Skipped ${skipped} duplicate(s).` : ""}`);
+      }
       setFile(null);
       fetchFaqs();
     } catch (err: any) {
@@ -232,6 +272,22 @@ export default function FAQsPage() {
         </div>
 
         {/* MODAL */}
+        {showUploadModal && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
+              <h3 className="text-lg font-semibold mb-4">Upload Result</h3>
+              <p className="mb-4">{uploadMessage}</p>
+              <div className="flex justify-end">
+                <button
+                  className="px-4 py-2 bg-indigo-600 text-white rounded"
+                  onClick={() => { setShowUploadModal(false); setUploadMessage(""); }}
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         {showModal && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
             <form onSubmit={handleSave} className="bg-white p-6 rounded w-full max-w-lg">

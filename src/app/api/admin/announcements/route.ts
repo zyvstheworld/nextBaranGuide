@@ -37,7 +37,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { title, content, is_active } = body;
+    const { title, content, is_active, image_url } = body;
 
     if (!title || !content) {
       return NextResponse.json(
@@ -46,17 +46,18 @@ export async function POST(request: Request) {
       );
     }
 
+    const announcementData: any = {
+      title,
+      content,
+      is_active: is_active !== undefined ? is_active : true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    if (image_url) announcementData.image_url = image_url;
+
     const { data: announcement, error } = await supabase
       .from('announcements')
-      .insert([
-        {
-          title,
-          content,
-          is_active: is_active !== undefined ? is_active : true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-      ])
+      .insert([announcementData])
       .select()
       .single();
 

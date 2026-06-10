@@ -40,7 +40,8 @@ async function getDatabaseContext() {
 
     context += "SERVICES:\n";
     services?.forEach(service => {
-      context += `Service: ${service.title}\nRequirements: ${service.requirements}\nFee: ${service.price}\nDuration: ${service.duration}\n\n`;
+      const feeLabel = Number(service.price) === 0 ? 'Free' : `₱${Number(service.price).toFixed(2)}`;
+      context += `Service: ${service.title}\nRequirements: ${service.requirements}\nFee: ${feeLabel}\nDuration: ${service.duration}\n\n`;
     });
 
     if (demographics && demographics.length > 0) {

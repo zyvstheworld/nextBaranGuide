@@ -6,6 +6,7 @@ interface Announcement {
   id: string;
   title: string;
   content: string;
+  image_url?: string;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -18,6 +19,8 @@ export default function AnnouncementsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editAnnouncement, setEditAnnouncement] = useState<Announcement | null>(null);
   const [form, setForm] = useState({ title: "", content: "", is_active: true });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState("");
 
   // Fetch announcements
   const fetchAnnouncements = async () => {
@@ -41,16 +44,34 @@ export default function AnnouncementsPage() {
   }, []);
 
   // Handle Add/Edit
+  const readFileAsDataUrl = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     const title = form.title.trim();
     const content = form.content.trim();
+    let imageUrl = imagePreview;
 
     if (!title || !content) {
       setError("Title and content are required");
       return;
+    }
+
+    if (imageFile) {
+      try {
+        imageUrl = await readFileAsDataUrl(imageFile);
+      } catch (err) {
+        setError("Failed to read image file.");
+        return;
+      }
     }
 
     try {
@@ -60,14 +81,17 @@ export default function AnnouncementsPage() {
 
       const method = editAnnouncement ? "PUT" : "POST";
 
+      const payload: any = {
+        title,
+        content,
+        is_active: form.is_active,
+      };
+      if (imageUrl) payload.image_url = imageUrl;
+
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          content,
-          is_active: form.is_active,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) throw new Error(`Failed to ${editAnnouncement ? "update" : "create"} announcement`);
@@ -90,6 +114,8 @@ export default function AnnouncementsPage() {
       content: announcement.content,
       is_active: announcement.is_active,
     });
+    setImagePreview(announcement.image_url || "");
+    setImageFile(null);
     setShowModal(true);
   };
 
@@ -116,6 +142,8 @@ export default function AnnouncementsPage() {
     setShowModal(false);
     setEditAnnouncement(null);
     setForm({ title: "", content: "", is_active: true });
+    setImageFile(null);
+    setImagePreview("");
     setError("");
   };
 
@@ -187,6 +215,34 @@ export default function AnnouncementsPage() {
                   />
                 </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Image file
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] || null;
+                      setImageFile(file);
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = () => setImagePreview(reader.result as string);
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="w-full text-sm text-gray-600"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Optional. Choose an image from your computer to upload.
+                  </p>
+                </div>
+
+                {imagePreview && (
+                  <div className="rounded-lg overflow-hidden border border-gray-200 mb-4">
+                    <img src={imagePreview} alt="Announcement preview" className="w-full h-48 object-cover" />
+                  </div>
+                )}
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -232,6 +288,15 @@ export default function AnnouncementsPage() {
                 <div key={announcement.id} className="p-6 hover:bg-gray-50 transition-colors">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex-1">
+                      {announcement.image_url && (
+                        <div className="mb-4 overflow-hidden rounded-2xl h-44">
+                          <img
+                            src={announcement.image_url}
+                            alt={announcement.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
                       <div className="flex items-center gap-3">
                         <h3 className="text-lg font-bold text-gray-900">
                           {announcement.title}

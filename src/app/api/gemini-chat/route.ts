@@ -32,7 +32,8 @@ export async function POST(req: NextRequest) {
     prompt += `\nServices:\n`;
     if (services && services.length > 0) {
       services.forEach((service, i) => {
-        prompt += `${i + 1}. ${service.title}: ${service.description} (Price: ₱${service.price}, Duration: ${service.duration})\n`;
+        const priceLabel = Number(service.price) === 0 ? 'Free' : `₱${Number(service.price).toFixed(2)}`;
+        prompt += `${i + 1}. ${service.title}: ${service.description} (Price: ${priceLabel}, Duration: ${service.duration})\n`;
       });
     } else {
       prompt += "No services available.\n";

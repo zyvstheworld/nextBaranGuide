@@ -23,6 +23,7 @@ interface Announcement {
   id: string;
   title: string;
   content: string;
+  image_url?: string;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -402,7 +403,11 @@ export default function ChatbotPage() {
                     {service.requirements}
                   </p>
                   <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
-                    <span className="font-semibold text-blue-600">₱{service.price.toFixed(2)}</span>
+                    {service.price === 0 ? (
+                      <span className="font-semibold text-blue-600">Free</span>
+                    ) : (
+                      <span className="font-semibold text-blue-600">₱{service.price.toFixed(2)}</span>
+                    )}
                     <span>•</span>
                     <span>{service.duration}</span>
                   </div>
@@ -437,17 +442,33 @@ export default function ChatbotPage() {
                 announcements.map((announcement) => (
                   <div
                     key={announcement.id}
-                    className="bg-white border border-gray-100 rounded-2xl p-4 md:p-6"
+                    className="bg-white border border-gray-100 rounded-2xl overflow-hidden"
                   >
-                    <h3 className="text-lg font-bold tracking-tight text-gray-900 mb-2 line-clamp-2">
-                      {announcement.title}
-                    </h3>
+                    {announcement.image_url && (
+                      <a
+                        href={announcement.image_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full h-48 overflow-hidden rounded-t-2xl"
+                      >
+                        <img
+                          src={announcement.image_url}
+                          alt={announcement.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </a>
+                    )}
+                    <div className="p-4 md:p-6">
+                      <h3 className="text-lg font-bold tracking-tight text-gray-900 mb-2 line-clamp-2">
+                        {announcement.title}
+                      </h3>
 
-                    <p className="text-gray-600 text-sm tracking-tight leading-relaxed line-clamp-3 mb-3">
-                      {announcement.content}
-                    </p>
+                      <p className="text-gray-600 text-sm tracking-tight leading-relaxed line-clamp-3 mb-3">
+                        {announcement.content}
+                      </p>
+                    </div>
 
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-500 px-4 md:px-6 pb-4">
                       {new Date(announcement.created_at).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",

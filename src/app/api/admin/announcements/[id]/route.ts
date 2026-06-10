@@ -9,16 +9,19 @@ export async function PUT(
   try {
     const { id } = params;
     const body = await request.json();
-    const { title, content, is_active } = body;
+    const { title, content, is_active, image_url } = body;
+
+    const announcementData: any = {
+      title,
+      content,
+      is_active,
+      updated_at: new Date().toISOString(),
+    };
+    announcementData.image_url = image_url || null;
 
     const { data: announcement, error } = await supabase
       .from('announcements')
-      .update({
-        title,
-        content,
-        is_active,
-        updated_at: new Date().toISOString(),
-      })
+      .update(announcementData)
       .eq('id', id)
       .select()
       .single();

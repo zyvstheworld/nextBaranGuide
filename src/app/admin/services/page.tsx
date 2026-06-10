@@ -222,7 +222,7 @@ export default function ServicesPage() {
                     <tr key={service.id} className="border-b last:border-b-0">
                       <td className="py-3 px-4">{service.title}</td>
                       <td className="py-3 px-4">{service.requirements}</td>
-                      <td className="py-3 px-4">₱{service.price.toFixed(2)}</td>
+                      <td className="py-3 px-4">{service.price === 0 ? 'Free' : `₱${service.price.toFixed(2)}`}</td>
                       <td className="py-3 px-4">{service.duration}</td>
                       <td className="py-3 px-4">
                         <button
