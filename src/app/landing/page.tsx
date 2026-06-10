@@ -261,9 +261,10 @@ export default function ChatbotPage() {
         {/* header navigation inside hero section */}
         <header className="relative px-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 px-3 py-2">
               <Image src="/baranguide-log.png" alt="BaranGuide Logo" width={150} height={50} className="h-10 w-auto" />
-        </div>
+              <Image src="/olongapo-seal.png" alt="Olongapo City Seal" width={72} height={72} className="h-12 w-auto" />
+            </div>
             <nav className="hidden md:flex items-center gap-4 lg:gap-4">
               <a href="#announcements" className="px-3 py-2 text-white text-sm tracking-tight font-medium hover:text-gray-200 transition-colors whitespace-nowrap" >
                 Announcements
